@@ -1,0 +1,50 @@
+env:
+  es6: true
+  node: true
+  mocha: true
+extends: 'airbnb-base'
+rules:
+  indent:
+    - error
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  strict: off
+  one-var: off
+  no-multi-spaces: off
+  key-spacing: off
+  object-curly-spacing: off
+  consistent-return: off
+  no-plusplus: off
+  prefer-template: off
+  global-require: off
+  no-continue: off
+  no-use-before-define: off
+  no-param-reassign: off
+  max-len: off
+  no-underscore-dangle: off
+  no-mixed-operators: off
+  import/no-dynamic-require: off
+  no-return-assign: off
+  no-bitwise: off
+  camelcase: off
+  complexity:
+    - error
+    - 12
+  object-curly-newline:
+    - error
+    - ObjectExpression:
+        minProperties: 8
+        multiline: true
+        consistent: true
+      ObjectPattern:
+        minProperties: 8
+        multiline: true
+        consistent: true
