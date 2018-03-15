@@ -1,6 +1,6 @@
 {
   "name": "@everymundo/promise-data-to",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "This is a helper to perform POST requests using promises and no external dependencies",
   "main": "index.js",
   "directories": {
