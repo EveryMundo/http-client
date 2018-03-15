@@ -28,14 +28,14 @@
   },
   "homepage": "https://github.com/EveryMundo/promise-data-to#readme",
   "devDependencies": {
-    "@everymundo/cleanrequire": "^1.0.0",
+    "@everymundo/cleanrequire": "^1.1.1",
     "chai": "^4.1.2",
     "istanbul": "^0.4.5",
-    "mocha": "^5.0.0",
-    "sinon": "^4.2.2"
+    "mocha": "^5.0.4",
+    "sinon": "^4.4.6"
   },
   "dependencies": {
     "@everymundo/json-utils": "^1.0.0",
-    "@everymundo/simple-logr": "^1.0.4"
+    "@everymundo/simple-logr": "^1.1.1"
   }
 }
