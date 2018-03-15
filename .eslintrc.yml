@@ -41,10 +41,10 @@ rules:
   object-curly-newline:
     - error
     - ObjectExpression:
-        minProperties: 8
+        minProperties: 12
         multiline: true
         consistent: true
       ObjectPattern:
-        minProperties: 8
+        minProperties: 12
         multiline: true
         consistent: true
