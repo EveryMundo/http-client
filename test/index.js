@@ -5,10 +5,10 @@
 
 describe('index.js', () => {
   const
-    { sandbox, spy } = require('sinon'),
-    { expect }       = require('chai'),
-    cleanrequire     = require('@everymundo/cleanrequire'),
-    loadLib = () => cleanrequire('../lib/promise-data-to'),
+    { sandbox }  = require('sinon'),
+    { expect }   = require('chai'),
+    cleanrequire = require('@everymundo/cleanrequire'),
+    loadLib = () => cleanrequire('../index.js'),
     noop = () => { };
 
   // eslint-disable-next-line one-var-declaration-per-line
@@ -32,7 +32,7 @@ describe('index.js', () => {
     };
 
     it('should export the expected keys', () => {
-      const lib = require('../index.js');
+      const lib = loadLib();
 
       const libKeys = Object.keys(lib);
 
@@ -42,7 +42,7 @@ describe('index.js', () => {
     });
 
     it('should export the expected keys', () => {
-      const lib = require('../index.js');
+      const lib = loadLib();
 
       Object.keys(expected).forEach(key =>
         expect(lib[key]).to.be.instanceof(expected[key]));
