@@ -16,6 +16,8 @@ describe('promise-data-to', () => {
   let box;
 
   const logr = require('@everymundo/simple-logr');
+  const zlib = require('zlib');
+
   beforeEach(() => {
     box = sandbox.create();
     ['log', 'info', /* 'debug',  */'error']
@@ -26,29 +28,32 @@ describe('promise-data-to', () => {
 
   describe('#promiseDataTo', () => {
     // eslint-disable-next-line one-var-declaration-per-line
-    let httpRequest, httpEmitter, fakeEmitter;
+    let httpRequest, httpEmitter, httpResponse;
 
     const
       http = require('http'),
+      { EventEmitter } = require('events'),
       newEmitter = () => {
-        const emitter = new (require('events').EventEmitter)();
+        const emitter = new EventEmitter();
         emitter.headers = {};
+        emitter.setEncoding = noop;
+
         return emitter;
       },
-      newHttpEmitter = () => {
+      newHttpEmitter = (response) => {
         const emitter = newEmitter();
-        emitter.write = data => fakeEmitter.emit('data', Buffer.from(data));
-        emitter.end = () => fakeEmitter.emit('end');
+
+        emitter.response = response;
+        emitter.write = data => response.emit('data', Buffer.from(data));
+        emitter.end = () => response.emit('end');
 
         return emitter;
       };
 
     beforeEach(() => {
-      httpRequest = box.stub(http, 'request');
-      fakeEmitter = newEmitter();
-      httpEmitter = newHttpEmitter();
-
-      fakeEmitter.setEncoding = noop;
+      httpRequest  = box.stub(http, 'request');
+      httpResponse = newEmitter();
+      httpEmitter  = newHttpEmitter(httpResponse);
     });
 
     const
@@ -67,8 +72,8 @@ describe('promise-data-to', () => {
         expectedData = JSON.stringify(data);
 
       httpRequest.callsFake((options, callback) => {
-        fakeEmitter.statusCode = 200;
-        callback(fakeEmitter);
+        httpResponse.statusCode = 200;
+        callback(httpResponse);
 
         return httpEmitter;
       });
@@ -88,8 +93,8 @@ describe('promise-data-to', () => {
         expectedData = JSON.stringify(data);
 
       httpRequest.callsFake((options, callback) => {
-        fakeEmitter.statusCode = 200;
-        callback(fakeEmitter);
+        httpResponse.statusCode = 200;
+        callback(httpResponse);
 
         return httpEmitter;
       });
@@ -113,8 +118,8 @@ describe('promise-data-to', () => {
         expectedData = JSON.stringify(data);
 
       httpRequest.callsFake((options, callback) => {
-        fakeEmitter.statusCode = 200;
-        callback(fakeEmitter);
+        httpResponse.statusCode = 200;
+        callback(httpResponse);
 
         return httpEmitter;
       });
@@ -135,8 +140,8 @@ describe('promise-data-to', () => {
 
     it('should success when status is between 200 and 299 using protocol and method=GET', () => {
       httpRequest.callsFake((options, callback) => {
-        fakeEmitter.statusCode = 200;
-        callback(fakeEmitter);
+        httpResponse.statusCode = 200;
+        callback(httpResponse);
 
         return httpEmitter;
       });
@@ -155,10 +160,58 @@ describe('promise-data-to', () => {
         });
     });
 
+    it('should success when status is between 200 and 299 and response is GZIP', () => {
+      const expected = JSON.stringify({name: 'Daniel', awesome: true});
+
+      httpEmitter.write = function write() {
+        this.response.emit('data', zlib.gzipSync(expected));
+      };
+
+      httpRequest.callsFake((options, callback) => {
+        httpResponse.statusCode = 200;
+        httpResponse.headers = {'content-encoding': 'gzip'};
+        callback(httpResponse);
+
+        return httpEmitter;
+      });
+
+      const { promiseDataTo } = loadLib();
+
+      return promiseDataTo(config, {})
+        .then((stats) => {
+          expect(stats.code).to.equal(200);
+          expect(stats).to.have.property('resTxt', expected);
+          expect(stats).to.not.have.property('err');
+        });
+    });
+
+    it('should REJECT when status 2** and response GZIP throws and error', () => {
+      httpRequest.callsFake((options, callback) => {
+        httpResponse.statusCode = 200;
+        httpResponse.headers = {'content-encoding': 'gzip'};
+        callback(httpResponse);
+
+        return httpEmitter;
+      });
+
+      const { promiseDataTo } = loadLib();
+
+      const secret = Math.random();
+
+      return promiseDataTo(config, 'something')
+        .catch((error) => {
+          expect(error).to.be.instanceof(Error);
+          expect(error).to.have.property('message', 'incorrect header check');
+
+          return secret;
+        })
+        .then(res => expect(res).to.equal(secret, 'It did not reject'));
+    });
+
     it('should reject when status is between 400', () => {
       httpRequest.callsFake((options, callback) => {
-        fakeEmitter.statusCode = 400;
-        callback(fakeEmitter);
+        httpResponse.statusCode = 400;
+        callback(httpResponse);
 
         return httpEmitter;
       });
@@ -196,7 +249,7 @@ describe('promise-data-to', () => {
           invalidAttempt = NaN;
 
         httpRequest.callsFake((options, callback) => {
-          callback(fakeEmitter);
+          callback(httpResponse);
 
           return httpEmitter;
         });
@@ -234,8 +287,8 @@ describe('promise-data-to', () => {
           expectedData = JSON.stringify(data);
 
         httpRequest.callsFake((options, callback) => {
-          fakeEmitter.statusCode = 302;
-          callback(fakeEmitter);
+          httpResponse.statusCode = 302;
+          callback(httpResponse);
 
           return httpEmitter;
         });
@@ -262,8 +315,8 @@ describe('promise-data-to', () => {
           expectedData = JSON.stringify(data);
 
         httpRequest.callsFake((options, callback) => {
-          fakeEmitter.statusCode = 404;
-          callback(fakeEmitter);
+          httpResponse.statusCode = 404;
+          callback(httpResponse);
 
           return httpEmitter;
         });
@@ -291,8 +344,8 @@ describe('promise-data-to', () => {
           expectedData = JSON.stringify(data);
 
         httpRequest.callsFake((options, callback) => {
-          callback(fakeEmitter);
-          httpEmitter = newHttpEmitter();
+          callback(httpResponse);
+          httpEmitter = newHttpEmitter(httpResponse);
           httpEmitter.end = () => httpEmitter.emit('error', new Error('FakeError'));
           return httpEmitter;
         });
