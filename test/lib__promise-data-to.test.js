@@ -7,6 +7,7 @@ describe('promise-data-to', () => {
   const
     { sandbox, spy } = require('sinon'),
     { expect }       = require('chai'),
+    { clone }        = require('@everymundo/simple-clone'),
     cleanrequire     = require('@everymundo/cleanrequire'),
     loadLib = () => cleanrequire('../lib/promise-data-to'),
     noop = () => { };
@@ -60,7 +61,7 @@ describe('promise-data-to', () => {
         headers: { Authorization: 'Authorization' },
       };
 
-    it('should success when status is between 200 and 299', () => {
+    it('should success when status is between 200 and 299 using http', () => {
       const
         data = { a: 1, b: 2, c: 3 },
         expectedData = JSON.stringify(data);
@@ -81,10 +82,110 @@ describe('promise-data-to', () => {
         });
     });
 
+    it('should success when status is between 200 and 299 using protocol', () => {
+      const
+        data = { a: 1, b: 2, c: 3 },
+        expectedData = JSON.stringify(data);
+
+      httpRequest.callsFake((options, callback) => {
+        fakeEmitter.statusCode = 200;
+        callback(fakeEmitter);
+
+        return httpEmitter;
+      });
+
+      const { promiseDataTo } = loadLib();
+      const protoConfig = clone(config);
+      delete protoConfig.http;
+      protoConfig.protocol = 'http:';
+
+      return promiseDataTo(protoConfig, data)
+        .then((stats) => {
+          expect(stats.code).to.equal(200);
+          expect(stats).to.have.property('resTxt', expectedData);
+          expect(stats).to.not.have.property('err');
+        });
+    });
+
+    it('should success when status is between 200 and 299 using protocol and query', () => {
+      const
+        data = { a: 1, b: 2, c: 3 },
+        expectedData = JSON.stringify(data);
+
+      httpRequest.callsFake((options, callback) => {
+        fakeEmitter.statusCode = 200;
+        callback(fakeEmitter);
+
+        return httpEmitter;
+      });
+
+      const { promiseDataTo } = loadLib();
+      const protoConfig = clone(config);
+      delete protoConfig.http;
+      protoConfig.protocol = 'http:';
+      protoConfig.query    = {name:'Daniel', features:['awesome', 'handsome']};
+
+      return promiseDataTo(protoConfig, data)
+        .then((stats) => {
+          expect(stats.code).to.equal(200);
+          expect(stats).to.have.property('resTxt', expectedData);
+          expect(stats).to.not.have.property('err');
+        });
+    });
+
+    it('should success when status is between 200 and 299 using protocol and method=GET', () => {
+      httpRequest.callsFake((options, callback) => {
+        fakeEmitter.statusCode = 200;
+        callback(fakeEmitter);
+
+        return httpEmitter;
+      });
+
+      const { promiseDataTo } = loadLib();
+      const protoConfig = clone(config);
+      delete protoConfig.http;
+      protoConfig.protocol = 'http:';
+      protoConfig.method   = 'GET';
+
+      return promiseDataTo(protoConfig)
+        .then((stats) => {
+          expect(stats.code).to.equal(200);
+          expect(stats).to.have.property('resTxt', '');
+          expect(stats).to.not.have.property('err');
+        });
+    });
+
+    it('should reject when status is between 400', () => {
+      httpRequest.callsFake((options, callback) => {
+        fakeEmitter.statusCode = 400;
+        callback(fakeEmitter);
+
+        return httpEmitter;
+      });
+
+      const { promiseDataTo } = loadLib();
+
+      const secret = Math.random();
+
+      return promiseDataTo(config, '')
+        .catch((error) => {
+          expect(error).to.be.instanceof(Error);
+          expect(error).to.have.property('message', '400 Status');
+
+          return secret;
+        })
+        .then(res => expect(res).to.equal(secret, 'It did not reject'));
+    });
+
     context('when process.env.SIMULATE is set', () => {
+      const simulateLib = require('../lib/simulate-response');
+
       beforeEach(() => {
         box.stub(process.env, 'SIMULATE').value('1');
+        spy(simulateLib, 'simulatedResponse');
       });
+
+      afterEach(() => { });
 
       it('should succeed', () => {
         const
@@ -108,9 +209,8 @@ describe('promise-data-to', () => {
           expect(stats).to.not.have.property('err');
         });
 
-        logr.debug('SIMULATE SHOULD SUCCEED', process.env.SIMULATE);
         const { promiseDataTo } = loadLib();
-        logr.debug('DID SIMULATE SUCCEED?', process.env.SIMULATE);
+
         return promiseDataTo(config, dataObject)
           .then(thenFunction)
           .then(() => promiseDataTo(config, dataArray))
@@ -119,6 +219,7 @@ describe('promise-data-to', () => {
           .then(thenFunction)
           .then(() => {
             expect(thenFunction).to.have.property('calledThrice', true);
+            expect(simulateLib.simulatedResponse).to.have.property('calledThrice', true);
           });
       });
     });
