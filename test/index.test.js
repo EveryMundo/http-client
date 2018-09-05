@@ -44,8 +44,7 @@ describe('index.js', () => {
     it('should export the expected keys', () => {
       const lib = loadLib();
 
-      Object.keys(expected).forEach(key =>
-        expect(lib[key]).to.be.instanceof(expected[key]));
+      Object.keys(expected).forEach(key => expect(lib[key]).to.be.instanceof(expected[key]));
     });
   });
 });

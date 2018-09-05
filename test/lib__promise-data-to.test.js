@@ -5,6 +5,7 @@
 
 describe('promise-data-to', () => {
   const
+    sinon            = require('sinon'),
     { sandbox, spy } = require('sinon'),
     { expect }       = require('chai'),
     { clone }        = require('@everymundo/simple-clone'),
@@ -56,15 +57,50 @@ describe('promise-data-to', () => {
       httpEmitter  = newHttpEmitter(httpResponse);
     });
 
-    const
-      config = {
-        http,
-        host: 'localhost',
-        port: 80,
-        path: '/path',
-        endpoint: 'http://localhost:80/path',
-        headers: { Authorization: 'Authorization' },
-      };
+    const config = {
+      http,
+      host: 'localhost',
+      port: 80,
+      path: '/path',
+      endpoint: 'http://localhost:80/path',
+      headers: { Authorization: 'Authorization' },
+    };
+
+    context('Calling setHeaders', () => {
+      const libSetHeaders = cleanrequire('../lib/set-headers.js');
+
+      beforeEach(() => {
+        box.stub(libSetHeaders, 'setHeaders');
+      });
+
+      it('should call setHeaders passing the correct arguments', () => {
+        const { setHeaders } = libSetHeaders;
+        const data = { a: 1, b: 2, c: 3 };
+        const expectedData = require('zlib').gzipSync(JSON.stringify(data));
+
+        httpRequest.callsFake((options, callback) => {
+          httpResponse.statusCode = 200;
+          callback(httpResponse);
+
+          return httpEmitter;
+        });
+
+        const { promiseDataTo } = loadLib();
+        const customConfig = clone(config);
+        const { headers } = customConfig;
+
+        customConfig.http     = http;
+        customConfig.compress = 'gzip';
+
+        return promiseDataTo(customConfig, data)
+          .then(() => {
+            expect(setHeaders).to.have.property('calledOnce', true);
+            // expect(libSetHeaders.setHeaders.calledWith(headers, expectedData, 'gzip')).to.be.true;
+            sinon.assert.calledWith(setHeaders, headers, expectedData, 'gzip');
+            // expect(.calledWith(headers, expectedData, 'gzip')).to.be.true;
+          });
+      });
+    });
 
     it('should success when status is between 200 and 299 using http', () => {
       const
