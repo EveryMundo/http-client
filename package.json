@@ -9,8 +9,8 @@
   "scripts": {
     "cover": "RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= istanbul cover -x '*.test.js' _mocha $@",
     "check-coverage": "istanbul check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
-    "check-lint": "eslint *.js lib/*.js test/*.js routes/*.js",
-    "fix-lint": "eslint --fix *.js lib/*.js test/*.js routes/*.js",
+    "check-lint": "eslint *.js lib/*.js test/*.js",
+    "fix-lint": "eslint --fix *.js lib/*.js test/*.js",
     "test": "RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= mocha"
   },
   "config": {
@@ -38,12 +38,12 @@
   "homepage": "https://github.com/EveryMundo/promise-data-to#readme",
   "devDependencies": {
     "@everymundo/cleanrequire": "^1.1.1",
-    "@everymundo/simple-clone": "^1.0.0",
+    "@everymundo/simple-clone": "^1.1.0",
     "chai": "^4.1.2",
-    "ghooks": "^2.0.2",
+    "ghooks": "^2.0.4",
     "istanbul": "^0.4.5",
-    "mocha": "^5.0.4",
-    "sinon": "^4.4.6"
+    "mocha": "^5.2.0",
+    "sinon": "^4.5.0"
   },
   "dependencies": {
     "@everymundo/json-utils": "^1.0.0",
