@@ -62,6 +62,7 @@ describe('lib/parse-endpoints.js', () => {
             host: 'test.com',
             path: '/some/path',
             port: null,
+            compress: undefined,
           }],
         };
 
@@ -87,6 +88,7 @@ describe('lib/parse-endpoints.js', () => {
             host: 'test.com',
             path: '/some/path',
             port: null,
+            compress: undefined,
           }],
         };
 
@@ -113,6 +115,7 @@ describe('lib/parse-endpoints.js', () => {
             host: 'test.com',
             path: '/some/path',
             port: null,
+            compress: undefined,
           }],
         };
 
@@ -125,7 +128,7 @@ describe('lib/parse-endpoints.js', () => {
         box.stub(process.env, 'MAIN_ENDPOINT')
           .value('http://Bearer:token@test.com/some/path');
         box.stub(process.env, 'MAIN_ENDPOINT_HEADERS')
-          .value('{"content-type":"application/xml"}');
+          .value('{"content-type":"application/xml","content-encoding":"gzip"}');
       });
 
       it('should return an object with the expected properties', () => {
@@ -138,10 +141,12 @@ describe('lib/parse-endpoints.js', () => {
             headers: {
               Authorization: 'Bearer token',
               'content-type': 'application/xml',
+              'content-encoding': 'gzip',
             },
             host: 'test.com',
             path: '/some/path',
             port: null,
+            compress: 'gzip',
           }],
         };
 
@@ -170,6 +175,7 @@ describe('lib/parse-endpoints.js', () => {
             host: 'test.com',
             path: '/some/path',
             port: null,
+            compress: undefined,
           }],
         };
 
