@@ -9,8 +9,8 @@
   "scripts": {
     "cover": "RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= istanbul cover -x '*.test.js' _mocha $@",
     "check-coverage": "istanbul check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
-    "check-lint": "eslint *.js lib/*.js test/*.js",
-    "fix-lint": "eslint --fix *.js lib/*.js test/*.js",
+    "check-lint": "standard *.js lib/*.js test/*.js",
+    "fix-lint": "standard --fix *.js lib/*.js test/*.js",
     "test": "RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= mocha"
   },
   "config": {
@@ -43,7 +43,8 @@
     "ghooks": "^2.0.4",
     "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
-    "sinon": "^7.3.2"
+    "sinon": "^7.3.2",
+    "standard": "^12.0.1"
   },
   "dependencies": {
     "@everymundo/json-utils": "^1.0.0",
