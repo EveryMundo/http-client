@@ -37,16 +37,16 @@
   },
   "homepage": "https://github.com/EveryMundo/promise-data-to#readme",
   "devDependencies": {
-    "@everymundo/cleanrequire": "^1.1.1",
+    "@everymundo/cleanrequire": "^1.2.1",
     "@everymundo/simple-clone": "^1.1.0",
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "ghooks": "^2.0.4",
     "istanbul": "^0.4.5",
-    "mocha": "^5.2.0",
-    "sinon": "^4.5.0"
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2"
   },
   "dependencies": {
     "@everymundo/json-utils": "^1.0.0",
-    "@everymundo/simple-logr": "^1.1.1"
+    "@everymundo/simple-logr": "^1.2.2"
   }
 }
