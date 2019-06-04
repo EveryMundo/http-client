@@ -29,6 +29,18 @@ describe('lib/parse-endpoints.js', () => {
 
   afterEach(() => { box.restore() })
 
+  describe('#parseKeepAlive', () => {
+    it('should return an object with the expected properties', () => {
+      const { parseKeepAlive } = loadLib()
+
+      const headers = { 'keep-alive': 'max=1000, timeout=1000' }
+      const res = parseKeepAlive(headers)
+      const expected = { max: '1000', timeout: '1000' }
+
+      expect(res).to.deep.equal(expected)
+    })
+  })
+
   context('parseEndpoints', () => {
     const { parseEndpoints } = loadLib()
 
@@ -58,6 +70,7 @@ describe('lib/parse-endpoints.js', () => {
         const expected = {
           MAIN: [{
             http,
+            agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: { },
             host: 'test.com',
@@ -83,6 +96,7 @@ describe('lib/parse-endpoints.js', () => {
         const expected = {
           MAIN_ENDPOINT: [{
             http,
+            agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: {},
             host: 'test.com',
@@ -108,6 +122,7 @@ describe('lib/parse-endpoints.js', () => {
         const expected = {
           MAIN: [{
             http,
+            agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: {
               Authorization: 'Bearer token'
@@ -137,6 +152,7 @@ describe('lib/parse-endpoints.js', () => {
         const expected = {
           MAIN: [{
             http,
+            agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: {
               Authorization: 'Bearer token',
@@ -154,6 +170,90 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
+    context('http url with keep-alive headers', () => {
+      beforeEach(() => {
+        if (!('KEEP_ENDPOINT' in process.env)) process.env.KEEP_ENDPOINT = undefined
+        box.stub(process.env, 'KEEP_ENDPOINT')
+          .value('http://Bearer:token@test.com/some/path')
+
+        if (!('KEEP_ENDPOINT_HEADERS' in process.env)) process.env.KEEP_ENDPOINT_HEADERS = undefined
+        box.stub(process.env, 'KEEP_ENDPOINT_HEADERS')
+          .value('{"content-type":"application/xml","keep-alive":"max=100,timeout=1000"}')
+      })
+
+      it('should return an object with the expected properties', () => {
+        const result = parseEndpoints(/^(KEEP)_ENDPOINT$/)
+
+        const expected = {
+          KEEP: [{
+            http,
+            agent: undefined,
+            endpoint: 'http://test.com/some/path',
+            headers: {
+              Authorization: 'Bearer token',
+              'content-type': 'application/xml'
+            },
+            host: 'test.com',
+            path: '/some/path',
+            port: null,
+            compress: undefined
+          }]
+        }
+
+        const { agent } = result.KEEP[0]
+        result.KEEP[0].agent = undefined
+
+        expect(result).to.deep.equal(expected)
+
+        expect(agent).to.be.instanceof(http.Agent)
+        expect(agent.keepAlive).to.be.true
+        expect(agent.maxSockets).to.equal(100)
+        expect(agent.options.timeout).to.equal(1000)
+      })
+    })
+
+    context('http url with keep-alive headers', () => {
+      beforeEach(() => {
+        if (!('KEEP_ENDPOINT' in process.env)) process.env.KEEP_ENDPOINT = undefined
+        box.stub(process.env, 'KEEP_ENDPOINT')
+          .value('http://Bearer:token@test.com/some/path')
+
+        if (!('KEEP_ENDPOINT_HEADERS' in process.env)) process.env.KEEP_ENDPOINT_HEADERS = undefined
+        box.stub(process.env, 'KEEP_ENDPOINT_HEADERS')
+          .value('{"content-type":"application/xml","keep-alive":"true"}')
+      })
+
+      it('should return an object with the expected properties', () => {
+        const result = parseEndpoints(/^(KEEP)_ENDPOINT$/)
+
+        const expected = {
+          KEEP: [{
+            http,
+            agent: undefined,
+            endpoint: 'http://test.com/some/path',
+            headers: {
+              Authorization: 'Bearer token',
+              'content-type': 'application/xml'
+            },
+            host: 'test.com',
+            path: '/some/path',
+            port: null,
+            compress: undefined
+          }]
+        }
+
+        const { agent } = result.KEEP[0]
+        result.KEEP[0].agent = undefined
+
+        expect(result).to.deep.equal(expected)
+
+        expect(agent).to.be.instanceof(http.Agent)
+        expect(agent.keepAlive).to.be.true
+        expect(agent.maxSockets).to.equal(50)
+        expect(agent.options.timeout).to.be.undefined
+      })
+    })
+
     context('http simple url with headers', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAIN_ENDPOINT')
@@ -168,6 +268,7 @@ describe('lib/parse-endpoints.js', () => {
         const expected = {
           MAIN: [{
             http,
+            agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: {
               'content-type': 'application/xml'

@@ -38,7 +38,7 @@
   "homepage": "https://github.com/EveryMundo/promise-data-to#readme",
   "devDependencies": {
     "@everymundo/cleanrequire": "^1.2.1",
-    "@everymundo/simple-clone": "^1.1.0",
+    "@everymundo/simple-clone": "^1.1.1",
     "chai": "^4.2.0",
     "ghooks": "^2.0.4",
     "mocha": "^6.1.4",
@@ -47,7 +47,7 @@
     "standard": "^12.0.1"
   },
   "dependencies": {
-    "@everymundo/json-utils": "^1.0.0",
+    "@everymundo/json-utils": "^1.0.1",
     "@everymundo/simple-logr": "^1.2.2"
   }
 }
