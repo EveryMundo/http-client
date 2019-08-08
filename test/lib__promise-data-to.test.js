@@ -104,8 +104,7 @@ describe('promise-data-to', () => {
     })
 
     it('should success when status is between 200 and 299 using http', () => {
-      const
-        data = { a: 1, b: 2, c: 3 }
+      const data = { a: 1, b: 2, c: 3 }
 
       const expectedData = JSON.stringify(data)
 
@@ -117,7 +116,8 @@ describe('promise-data-to', () => {
       })
 
       const { promiseDataTo } = loadLib()
-      return promiseDataTo(config, data)
+      const customConfig = { ...config, headers: undefined }
+      return promiseDataTo(customConfig, data)
         .then((stats) => {
           expect(stats.code).to.equal(200)
           expect(stats).to.have.property('resTxt', expectedData)

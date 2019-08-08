@@ -4,7 +4,7 @@
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
 describe('index.js', () => {
-  const url = require('url')
+  const { parseUrl } = require('../lib/parse-url')
   const sinon = require('sinon')
   const { expect } = require('chai')
   // const { clone }    = require('@everymundo/simple-clone')
@@ -37,7 +37,7 @@ describe('index.js', () => {
     it('should call promiseDataTo', () => {
       const { promiseGet } = loadLib()
 
-      const config = url.parse('http://test.com/somepath')
+      const config = parseUrl('http://test.com/somepath')
 
       return promiseGet(config)
         .then(() => {
@@ -48,7 +48,7 @@ describe('index.js', () => {
     it('should call promiseDataTo', () => {
       const { promiseGet } = loadLib()
 
-      const config = url.parse('http://test.com/somepath')
+      const config = parseUrl('http://test.com/somepath')
       // eslint-disable-next-line one-var-declaration-per-line
       let protocol, http, host, port, query, path, endpoint, headers, agent, maxRetry
       const expected = { protocol, http, host, port, query, path, endpoint, headers, agent, maxRetry, method: 'GET' }

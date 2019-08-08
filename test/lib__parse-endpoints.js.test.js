@@ -75,7 +75,7 @@ describe('lib/parse-endpoints.js', () => {
             headers: { },
             host: 'test.com',
             path: '/some/path',
-            port: null,
+            port: '',
             compress: undefined
           }]
         }
@@ -101,7 +101,7 @@ describe('lib/parse-endpoints.js', () => {
             headers: {},
             host: 'test.com',
             path: '/some/path',
-            port: null,
+            port: '',
             compress: undefined
           }]
         }
@@ -129,7 +129,7 @@ describe('lib/parse-endpoints.js', () => {
             },
             host: 'test.com',
             path: '/some/path',
-            port: null,
+            port: '',
             compress: undefined
           }]
         }
@@ -161,7 +161,7 @@ describe('lib/parse-endpoints.js', () => {
             },
             host: 'test.com',
             path: '/some/path',
-            port: null,
+            port: '',
             compress: 'gzip'
           }]
         }
@@ -195,7 +195,7 @@ describe('lib/parse-endpoints.js', () => {
             },
             host: 'test.com',
             path: '/some/path',
-            port: null,
+            port: '',
             compress: undefined
           }]
         }
@@ -237,7 +237,7 @@ describe('lib/parse-endpoints.js', () => {
             },
             host: 'test.com',
             path: '/some/path',
-            port: null,
+            port: '',
             compress: undefined
           }]
         }
@@ -275,7 +275,7 @@ describe('lib/parse-endpoints.js', () => {
             },
             host: 'test.com',
             path: '/some/path',
-            port: null,
+            port: '',
             compress: undefined
           }]
         }

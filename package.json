@@ -9,7 +9,7 @@
   "scripts": {
     "cover": "RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= LOG_LEVEL=trace nyc -x test --reporter=lcov --reporter=text mocha test --recursive",
     "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
-    "check-lint": "standard --env=mocha *.js lib/*.js spec/*.js spec/lib/*.js",
+    "check-lint": "standard --env=mocha *.js lib/*.js test/*.js test/lib/*.js",
     "fix-lint": "standard --env=mocha --fix *.js lib/*.js test/*.js",
     "test": "RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= mocha"
   },
@@ -41,10 +41,10 @@
     "@everymundo/simple-clone": "^1.1.1",
     "chai": "^4.2.0",
     "ghooks": "^2.0.4",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.0",
     "nyc": "^14.1.1",
-    "sinon": "^7.3.2",
-    "standard": "^12.0.1"
+    "sinon": "^7.4.1",
+    "standard": "^13.1.0"
   },
   "dependencies": {
     "@everymundo/json-utils": "^1.0.1",

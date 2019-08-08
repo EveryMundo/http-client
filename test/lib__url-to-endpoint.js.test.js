@@ -59,8 +59,9 @@ describe('index.js', () => {
             headers: { },
             host: 'test.com',
             path: '/some/path',
-            port: null,
-            search: null
+            port: '',
+            search: '',
+            compress: false
           }
 
           expect(result).to.deep.equal(expected)
@@ -79,8 +80,9 @@ describe('index.js', () => {
             },
             host: 'test.com',
             path: '/some/path',
-            port: null,
-            search: null
+            port: '',
+            search: '',
+            compress: false
           }
 
           expect(result).to.deep.equal(expected)
@@ -102,8 +104,9 @@ describe('index.js', () => {
             },
             host: 'test.com',
             path: '/some/path',
-            port: null,
-            search: null
+            port: '',
+            search: '',
+            compress: false
           }
 
           expect(result).to.deep.equal(expected)
@@ -124,19 +127,43 @@ describe('index.js', () => {
             },
             host: 'test.com',
             path: '/some/path',
-            port: null,
-            search: null
+            port: '',
+            search: '',
+            compress: false
           }
 
           expect(result).to.deep.equal(expected)
+        })
+
+        context('when content-encoding is passed as gzip', () => {
+          it('should return compress as "gzip"', () => {
+            const headers = { 'Content-Encoding': 'gzip' }
+            const endpointUrl = 'http://test.com/some/path'
+            const result = urlToEndpoint(endpointUrl, headers)
+
+            const expected = {
+              http,
+              endpoint: 'http://test.com/some/path',
+              headers: {
+                'content-encoding': 'gzip'
+              },
+              host: 'test.com',
+              path: '/some/path',
+              port: '',
+              search: '',
+              compress: 'gzip'
+            }
+
+            expect(result).to.deep.equal(expected)
+          })
         })
       })
 
       context('http simple url but INVALID headers', () => {
         it('should return an object with the expected properties', () => {
           const headers = ''
-          const endpointUrl = 'http://test.com/some/path'
-          const result = urlToEndpoint(endpointUrl, headers)
+          const endpoint = 'http://test.com/some/path'
+          const result = urlToEndpoint(endpoint, headers)
 
           const expected = {
             http,
@@ -144,8 +171,9 @@ describe('index.js', () => {
             headers: {},
             host: 'test.com',
             path: '/some/path',
-            port: null,
-            search: null
+            port: '',
+            search: '',
+            compress: false
           }
 
           expect(result).to.deep.equal(expected)
