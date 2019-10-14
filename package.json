@@ -7,11 +7,11 @@
     "lib": "lib"
   },
   "scripts": {
-    "cover": "RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= LOG_LEVEL=trace nyc -x test --reporter=lcov --reporter=text mocha test --recursive",
+    "cover": "env RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= LOG_LEVEL=trace nyc -x test --reporter=lcov --reporter=text mocha test --recursive",
     "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
     "check-lint": "standard --env=mocha *.js lib/*.js test/*.js test/lib/*.js",
     "fix-lint": "standard --env=mocha --fix *.js lib/*.js test/*.js",
-    "test": "RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= mocha"
+    "test": "env RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= mocha"
   },
   "config": {
     "ghooks": {
