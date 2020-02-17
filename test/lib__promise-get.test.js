@@ -7,21 +7,17 @@ describe('index.js', () => {
   const { parseUrl } = require('../lib/parse-url')
   const sinon = require('sinon')
   const { expect } = require('chai')
-  // const { clone }    = require('@everymundo/simple-clone')
   const cleanrequire = require('@everymundo/cleanrequire')
-  const logr = require('@everymundo/simple-logr')
 
   const loadLib = () => cleanrequire('../lib/promise-get')
-
-  const noop = () => { }
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
   beforeEach(() => {
-    box = sinon.createSandbox();
-    ['log', 'info', /* 'debug',  */'error']
-      .forEach(method => box.stub(logr, method).callsFake(noop))
+    box = sinon.createSandbox()
+    // ['log', 'info', /* 'debug',  */'error']
+    //   .forEach(method => box.stub(logr, method).callsFake(noop))
   })
 
   afterEach(() => { box.restore() })
@@ -37,7 +33,7 @@ describe('index.js', () => {
     it('should call promiseDataTo', () => {
       const { promiseGet } = loadLib()
 
-      const config = parseUrl('http://test.com/somepath')
+      const config = parseUrl('http://password@test.com/somepath')
 
       return promiseGet(config)
         .then(() => {
@@ -46,14 +42,14 @@ describe('index.js', () => {
     })
 
     it('should call promiseDataTo', () => {
-      const { promiseGet } = loadLib()
+      const { promiseGet } = require('../lib/promise-get')
 
       const config = parseUrl('http://test.com/somepath')
       // eslint-disable-next-line one-var-declaration-per-line
       let protocol, http, host, port, query, path, endpoint, headers, agent, maxRetry
       const expected = { protocol, http, host, port, query, path, endpoint, headers, agent, maxRetry, method: 'GET' }
 
-      Object.keys(config).forEach((key) => {
+      Object.keys(expected).forEach((key) => {
         if (key in expected) expected[key] = config[key]
       })
 

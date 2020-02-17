@@ -8,10 +8,6 @@ describe('lib/parse-endpoints.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
 
-  // { clone }    = require('@everymundo/simple-clone'),
-  // cleanrequire = require('@everymundo/cleanrequire'),
-  // noop = () => { },
-
   const loadLib = () => require('../lib/parse-endpoints.js')
 
   // eslint-disable-next-line one-var-declaration-per-line
@@ -31,10 +27,22 @@ describe('lib/parse-endpoints.js', () => {
 
   describe('#parseKeepAlive', () => {
     it('should return an object with the expected properties', () => {
-      const { parseKeepAlive } = loadLib()
+      const { parseKeepAlive } = require('../lib/parse-keep-alive-header')
 
       const headers = { 'keep-alive': 'max=1000, timeout=1000' }
-      const res = parseKeepAlive(headers)
+      const res = parseKeepAlive(headers['keep-alive'])
+      const expected = { max: '1000', timeout: '1000' }
+
+      expect(res).to.deep.equal(expected)
+    })
+  })
+
+  describe('#parseKeepAliveHeader', () => {
+    it('should return an object with the expected properties', () => {
+      const { parseKeepAliveHeader } = require('../lib/parse-keep-alive-header')
+
+      const headers = { 'keep-alive': 'max=1000, timeout=1000' }
+      const res = parseKeepAliveHeader(headers)
       const expected = { max: '1000', timeout: '1000' }
 
       expect(res).to.deep.equal(expected)
@@ -69,8 +77,8 @@ describe('lib/parse-endpoints.js', () => {
 
         const expected = {
           MAIN: [{
-            http,
-            agent: undefined,
+            // http,
+            // agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: { },
             host: 'test.com',
@@ -80,7 +88,7 @@ describe('lib/parse-endpoints.js', () => {
           }]
         }
 
-        expect(result).to.deep.equal(expected)
+        expect(result.MAIN[0].getObject()).to.deep.equal(expected.MAIN[0])
         expect(Object.keys(result)).to.deep.equal(Object.keys(expected))
       })
     })
@@ -95,8 +103,8 @@ describe('lib/parse-endpoints.js', () => {
 
         const expected = {
           MAIN_ENDPOINT: [{
-            http,
-            agent: undefined,
+            // http,
+            // agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: {},
             host: 'test.com',
@@ -106,7 +114,7 @@ describe('lib/parse-endpoints.js', () => {
           }]
         }
 
-        expect(result).to.deep.equal(expected)
+        expect(result.MAIN_ENDPOINT[0].getObject()).to.deep.equal(expected.MAIN_ENDPOINT[0])
         expect(Object.keys(result)).to.deep.equal(Object.keys(expected))
       })
     })
@@ -121,11 +129,11 @@ describe('lib/parse-endpoints.js', () => {
 
         const expected = {
           MAIN: [{
-            http,
-            agent: undefined,
+            // http,
+            // agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: {
-              Authorization: 'Bearer token'
+              authorization: 'Bearer token'
             },
             host: 'test.com',
             path: '/some/path',
@@ -134,7 +142,7 @@ describe('lib/parse-endpoints.js', () => {
           }]
         }
 
-        expect(result).to.deep.equal(expected)
+        expect(result.MAIN[0].getObject()).to.deep.equal(expected.MAIN[0])
       })
     })
 
@@ -151,11 +159,11 @@ describe('lib/parse-endpoints.js', () => {
 
         const expected = {
           MAIN: [{
-            http,
-            agent: undefined,
+            // http,
+            // agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: {
-              Authorization: 'Bearer token',
+              authorization: 'Bearer token',
               'content-type': 'application/xml',
               'content-encoding': 'gzip'
             },
@@ -166,7 +174,7 @@ describe('lib/parse-endpoints.js', () => {
           }]
         }
 
-        expect(result).to.deep.equal(expected)
+        expect(result.MAIN[0].getObject()).to.deep.equal(expected.MAIN[0])
       })
     })
 
@@ -186,12 +194,14 @@ describe('lib/parse-endpoints.js', () => {
 
         const expected = {
           KEEP: [{
-            http,
-            agent: undefined,
+            // http,
+            // agent: undefined,
             endpoint: 'http://test.com/some/path',
             headers: {
-              Authorization: 'Bearer token',
-              'content-type': 'application/xml'
+              authorization: 'Bearer token',
+              connection: 'Keep-Alive',
+              'content-type': 'application/xml',
+              'keep-alive': 'max=100,timeout=1000'
             },
             host: 'test.com',
             path: '/some/path',
@@ -203,7 +213,7 @@ describe('lib/parse-endpoints.js', () => {
         const { agent } = result.KEEP[0]
         result.KEEP[0].agent = undefined
 
-        expect(result).to.deep.equal(expected)
+        expect(result.KEEP[0].getObject()).to.deep.equal(expected.KEEP[0])
 
         expect(agent).to.be.instanceof(http.Agent)
         expect(agent.keepAlive).to.be.true
@@ -227,25 +237,27 @@ describe('lib/parse-endpoints.js', () => {
         const result = parseEndpoints(/^(KEEP)_ENDPOINT$/)
 
         const expected = {
-          KEEP: [{
-            http,
-            agent: undefined,
-            endpoint: 'http://test.com/some/path',
-            headers: {
-              Authorization: 'Bearer token',
-              'content-type': 'application/xml'
-            },
-            host: 'test.com',
-            path: '/some/path',
-            port: '',
-            compress: undefined
-          }]
+          // http,
+          host: 'test.com',
+          // agent: undefined,
+          headers: {
+            'content-type': 'application/xml',
+            connection: 'Keep-Alive',
+            'keep-alive': 'true',
+            authorization: 'Bearer token'
+          },
+          port: '',
+          path: '/some/path',
+          endpoint: 'http://test.com/some/path',
+          compress: undefined
         }
 
         const { agent } = result.KEEP[0]
         result.KEEP[0].agent = undefined
 
-        expect(result).to.deep.equal(expected)
+        // expect(JSON.stringify(result.KEEP[0])).to.equal(JSON.stringify(expected))
+        expect(result.KEEP[0].getObject()).to.deep.equal(expected)
+        // expect(result.KEEP[0]).to.deep.equal(expected)
 
         expect(agent).to.be.instanceof(http.Agent)
         expect(agent.keepAlive).to.be.true
@@ -264,23 +276,24 @@ describe('lib/parse-endpoints.js', () => {
 
       it('should return an object with the expected properties', () => {
         const result = parseEndpoints()
+        expect(result).to.have.property('MAIN')
+        expect(result.MAIN).to.be.instanceof(Array)
+        expect(result.MAIN).to.have.property('length', 1)
 
         const expected = {
-          MAIN: [{
-            http,
-            agent: undefined,
-            endpoint: 'http://test.com/some/path',
-            headers: {
-              'content-type': 'application/xml'
-            },
-            host: 'test.com',
-            path: '/some/path',
-            port: '',
-            compress: undefined
-          }]
+          // http,
+          // agent: undefined,
+          endpoint: 'http://test.com/some/path',
+          headers: {
+            'content-type': 'application/xml'
+          },
+          host: 'test.com',
+          path: '/some/path',
+          port: '',
+          compress: undefined
         }
 
-        expect(result).to.deep.equal(expected)
+        expect(result.MAIN[0].getObject()).to.deep.equal(expected)
       })
     })
 

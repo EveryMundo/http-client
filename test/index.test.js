@@ -4,31 +4,32 @@
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
 describe('index.js', () => {
-  const
-    { sandbox } = require('sinon')
-
+  const sinon = require('sinon')
   const { expect } = require('chai')
+  // const cleanrequire = require('@everymundo/cleanrequire')
+  // const loadLib = () => cleanrequire('../index.js')
 
-  const cleanrequire = require('@everymundo/cleanrequire')
-
-  const loadLib = () => cleanrequire('../index.js')
-
-  const noop = () => { }
+  // const noop = () => { }
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
-  const logr = require('@everymundo/simple-logr')
+  // const logr = require('@everymundo/simple-logr')
   beforeEach(() => {
-    box = sandbox.create();
-    ['log', 'info', /* 'debug',  */'error']
-      .forEach(method => box.stub(logr, method).callsFake(noop))
+    box = sinon.createSandbox()
+    // ['log', 'info', /* 'debug',  */'error']
+    //   .forEach(method => box.stub(logr, method).callsFake(noop))
   })
 
   afterEach(() => { box.restore() })
 
   context('exported keys and types', () => {
     const expected = {
+      Endpoint: Function,
+      GetEndpoint: Function,
+      PostEndpoint: Function,
+      Headers: Function,
+      fetch: Function,
       promiseDataTo: Function,
       parseEndpoints: Function,
       urlToEndpoint: Function,
@@ -36,7 +37,7 @@ describe('index.js', () => {
     }
 
     it('should export the expected keys', () => {
-      const lib = loadLib()
+      const lib = require('../index.js')
 
       const libKeys = Object.keys(lib)
 
@@ -46,9 +47,12 @@ describe('index.js', () => {
     })
 
     it('should export the expected keys', () => {
-      const lib = loadLib()
+      const lib = require('../index.js')
 
-      Object.keys(expected).forEach(key => expect(lib[key]).to.be.instanceof(expected[key]))
+      Object.keys(expected).forEach((key) => {
+        expect(lib).to.have.property(key)
+        expect(lib[key]).to.be.instanceof(expected[key])
+      })
     })
   })
 })

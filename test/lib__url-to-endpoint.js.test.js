@@ -6,21 +6,17 @@
 describe('index.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
-  const logr = require('@everymundo/simple-logr')
-  // { clone }    = require('@everymundo/simple-clone'),
-  // cleanrequire = require('@everymundo/cleanrequire'),
-
   const loadLib = () => require('../lib/url-to-endpoint')
 
-  const noop = () => { }
+  // const noop = () => { }
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
   beforeEach(() => {
-    box = sinon.createSandbox();
-    ['log', 'info', /* 'debug',  */'error']
-      .forEach(method => box.stub(logr, method).callsFake(noop))
+    box = sinon.createSandbox()
+    // ['log', 'info', /* 'debug',  */'error']
+    //   .forEach(method => box.stub(logr, method).callsFake(noop))
   })
 
   afterEach(() => { box.restore() })

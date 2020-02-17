@@ -7,11 +7,11 @@
     "lib": "lib"
   },
   "scripts": {
-    "cover": "env RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= LOG_LEVEL=trace nyc -x test --reporter=lcov --reporter=text mocha test --recursive",
+    "cover": "env RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= LOG_LEVEL=silent nyc -x test --reporter=lcov --reporter=text mocha test --recursive",
     "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
     "check-lint": "standard --env=mocha *.js lib/*.js test/*.js test/lib/*.js",
     "fix-lint": "standard --env=mocha --fix *.js lib/*.js test/*.js",
-    "test": "env RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= mocha"
+    "test": "env RETRY_TIMEOUT_MS= MAX_RETRY_ATTEMPTS= SIMULATE= LOG_LEVEL=silent mocha test --recursive"
   },
   "config": {
     "ghooks": {
@@ -38,16 +38,14 @@
   "homepage": "https://github.com/EveryMundo/promise-data-to#readme",
   "devDependencies": {
     "@everymundo/cleanrequire": "^1.2.1",
-    "@everymundo/simple-clone": "^1.1.1",
     "chai": "^4.2.0",
     "ghooks": "^2.0.4",
-    "mocha": "^6.2.0",
-    "nyc": "^14.1.1",
-    "sinon": "^7.4.1",
-    "standard": "^13.1.0"
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0",
+    "sinon": "^8.1.1",
+    "standard": "^14.3.1"
   },
   "dependencies": {
-    "@everymundo/json-utils": "^1.0.1",
-    "@everymundo/simple-logr": "^1.2.2"
+    "@everymundo/simple-logr": "^2.0.4"
   }
 }

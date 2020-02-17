@@ -8,10 +8,6 @@ describe('lib/get-data-from-xdata.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
 
-  // { clone }    = require('@everymundo/simple-clone'),
-  // cleanrequire = require('@everymundo/cleanrequire'),
-  // noop = () => { },
-
   const loadLib = () => require('../lib/get-data-from-xdata')
 
   // eslint-disable-next-line one-var-declaration-per-line

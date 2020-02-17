@@ -7,8 +7,9 @@ describe('promise-data-to', () => {
   const sinon = require('sinon')
   const { spy } = require('sinon')
   const { expect } = require('chai')
-  const { clone } = require('@everymundo/simple-clone')
   const cleanrequire = require('@everymundo/cleanrequire')
+
+  const Endpoint = require('../classes/Endpoint.class')
   const loadLib = () => cleanrequire('../lib/promise-data-to')
 
   const noop = () => { }
@@ -16,13 +17,13 @@ describe('promise-data-to', () => {
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
-  const logr = require('@everymundo/simple-logr')
+  // const logr = require('@everymundo/simple-logr')
   const zlib = require('zlib')
 
   beforeEach(() => {
-    box = sinon.createSandbox();
-    ['log', 'info', /* 'debug',  */'error']
-      .forEach(method => box.stub(logr, method).callsFake(noop))
+    box = sinon.createSandbox()
+    // ['log', 'info', /* 'debug',  */'error']
+    //   .forEach(method => box.stub(logr, method).callsFake(noop))
   })
 
   afterEach(() => { box.restore() })
@@ -58,146 +59,154 @@ describe('promise-data-to', () => {
       httpEmitter = newHttpEmitter(httpResponse)
     })
 
-    const config = {
+    /* const config = {
       http,
       host: 'localhost',
       port: 80,
       path: '/path',
       endpoint: 'http://localhost:80/path',
       headers: { Authorization: 'Authorization' }
-    }
+    } */
 
-    context('Calling setHeaders', () => {
-      const libSetHeaders = cleanrequire('../lib/set-headers.js')
+    const endpoint = new Endpoint('http://Authorization@localhost:80/path')
 
+    context('When response is a simple statusCode 200', () => {
       beforeEach(() => {
-        box.stub(libSetHeaders, 'setHeaders')
-      })
-
-      it('should call setHeaders passing the correct arguments', () => {
-        const { setHeaders } = libSetHeaders
-        const data = { a: 1, b: 2, c: 3 }
-        const expectedData = require('zlib').gzipSync(JSON.stringify(data))
-
         httpRequest.callsFake((options, callback) => {
           httpResponse.statusCode = 200
           callback(httpResponse)
 
           return httpEmitter
         })
+      })
 
+      context('Calling setHeaders', () => {
+        const libSetHeaders = cleanrequire('../lib/set-headers.js')
+
+        beforeEach(() => {
+          box.stub(libSetHeaders, 'setHeaders')
+        })
+
+        it('should call setHeaders passing the correct arguments', () => {
+          const { setHeaders } = libSetHeaders
+          const data = { a: 1, b: 2, c: 3 }
+          const expectedData = require('zlib').gzipSync(JSON.stringify(data))
+
+          const { promiseDataTo } = loadLib()
+          const customConfig = Endpoint.clone(endpoint)
+          const headers = customConfig.headers.toObject()
+
+          customConfig.http = http
+          customConfig.compress = 'gzip'
+
+          return promiseDataTo(customConfig, data)
+            .then(() => {
+              expect(setHeaders).to.have.property('calledOnce', true)
+              // expect(libSetHeaders.setHeaders.calledWith(headers, expectedData, 'gzip')).to.be.true;
+              sinon.assert.calledWith(setHeaders, headers, expectedData, 'gzip')
+              // expect(.calledWith(headers, expectedData, 'gzip')).to.be.true;
+            })
+        })
+      })
+
+      it('should throw an error when an endpoint is falsy', async () => {
         const { promiseDataTo } = loadLib()
-        const customConfig = clone(config)
-        const { headers } = customConfig
+        let hasThrown = false
 
-        customConfig.http = http
-        customConfig.compress = 'gzip'
+        try {
+          await promiseDataTo(null)
+        } catch (error) {
+          expect(error).to.be.instanceof(Error)
+          expect(error.message).to.contain('EM: INVALID ENDPOINT')
+          hasThrown = true
+        }
+
+        expect(hasThrown).to.be.true
+      })
+
+      it('should success when status is between 200 and 299 using http', () => {
+        const data = { a: 1, b: 2, c: 3 }
+
+        const expectedData = JSON.stringify(data)
+        const { promiseDataTo } = loadLib()
+        const customConfig = Endpoint.clone(endpoint)
+        customConfig.headers = undefined
 
         return promiseDataTo(customConfig, data)
-          .then(() => {
-            expect(setHeaders).to.have.property('calledOnce', true)
-            // expect(libSetHeaders.setHeaders.calledWith(headers, expectedData, 'gzip')).to.be.true;
-            sinon.assert.calledWith(setHeaders, headers, expectedData, 'gzip')
-            // expect(.calledWith(headers, expectedData, 'gzip')).to.be.true;
+          .then((stats) => {
+            expect(stats.code).to.equal(200)
+            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.not.have.property('err')
           })
       })
-    })
 
-    it('should success when status is between 200 and 299 using http', () => {
-      const data = { a: 1, b: 2, c: 3 }
+      it('should success requesting endpoint as a string', () => {
+        const data = { a: 1, b: 2, c: 3 }
 
-      const expectedData = JSON.stringify(data)
+        const expectedData = JSON.stringify(data)
+        const expectedRequestHeaders = {
+          'content-type': 'application/json',
+          'content-length': 19,
+          authorization: 'something'
+        }
+        const { promiseDataTo } = loadLib()
+        const url = 'http://lala.com/something/else?a=10&b=20'
 
-      httpRequest.callsFake((options, callback) => {
-        httpResponse.statusCode = 200
-        callback(httpResponse)
-
-        return httpEmitter
+        return promiseDataTo(url, data, { headers: { Authorization: 'something' } })
+          .then((response) => {
+            expect(response.code).to.equal(200)
+            expect(response).to.have.property('resTxt', expectedData)
+            expect(response).to.have.property('requestHeaders')
+            expect(response.requestHeaders).to.deep.equal(expectedRequestHeaders)
+            expect(response).to.not.have.property('err')
+          })
       })
 
-      const { promiseDataTo } = loadLib()
-      const customConfig = { ...config, headers: undefined }
-      return promiseDataTo(customConfig, data)
-        .then((stats) => {
-          expect(stats.code).to.equal(200)
-          expect(stats).to.have.property('resTxt', expectedData)
-          expect(stats).to.not.have.property('err')
-        })
-    })
+      it('should success when status is between 200 and 299 using protocol', () => {
+        const data = { a: 1, b: 2, c: 3 }
+        const expectedData = JSON.stringify(data)
+        const { promiseDataTo } = loadLib()
+        const protoConfig = Endpoint.clone(endpoint)
 
-    it('should success when status is between 200 and 299 using protocol', () => {
-      const
-        data = { a: 1, b: 2, c: 3 }
-
-      const expectedData = JSON.stringify(data)
-
-      httpRequest.callsFake((options, callback) => {
-        httpResponse.statusCode = 200
-        callback(httpResponse)
-
-        return httpEmitter
+        return promiseDataTo(protoConfig, data)
+          .then((stats) => {
+            expect(stats.code).to.equal(200)
+            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.not.have.property('err')
+          })
       })
 
-      const { promiseDataTo } = loadLib()
-      const protoConfig = clone(config)
-      delete protoConfig.http
-      protoConfig.protocol = 'http:'
+      it('should success when status is between 200 and 299 using protocol and query', () => {
+        const data = { a: 1, b: 2, c: 3 }
+        const expectedData = JSON.stringify(data)
+        const { promiseDataTo } = loadLib()
+        const protoConfig = Endpoint.clone(endpoint)
+        // delete protoConfig.http
+        protoConfig.protocol = 'http:'
+        protoConfig.query = { name: 'Daniel', features: ['awesome', 'handsome'] }
 
-      return promiseDataTo(protoConfig, data)
-        .then((stats) => {
-          expect(stats.code).to.equal(200)
-          expect(stats).to.have.property('resTxt', expectedData)
-          expect(stats).to.not.have.property('err')
-        })
-    })
-
-    it('should success when status is between 200 and 299 using protocol and query', () => {
-      const
-        data = { a: 1, b: 2, c: 3 }
-
-      const expectedData = JSON.stringify(data)
-
-      httpRequest.callsFake((options, callback) => {
-        httpResponse.statusCode = 200
-        callback(httpResponse)
-
-        return httpEmitter
+        return promiseDataTo(protoConfig, data)
+          .then((stats) => {
+            expect(stats.code).to.equal(200)
+            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.not.have.property('err')
+          })
       })
 
-      const { promiseDataTo } = loadLib()
-      const protoConfig = clone(config)
-      delete protoConfig.http
-      protoConfig.protocol = 'http:'
-      protoConfig.query = { name: 'Daniel', features: ['awesome', 'handsome'] }
+      it('should success when status is between 200 and 299 using protocol and method=GET', () => {
+        const { promiseDataTo } = require('../lib/promise-data-to')
+        const protoConfig = Endpoint.clone(endpoint)
+        // protoConfig.http = undefined
+        // protoConfig.protocol = 'http:'
+        protoConfig.method = 'GET'
 
-      return promiseDataTo(protoConfig, data)
-        .then((stats) => {
-          expect(stats.code).to.equal(200)
-          expect(stats).to.have.property('resTxt', expectedData)
-          expect(stats).to.not.have.property('err')
-        })
-    })
-
-    it('should success when status is between 200 and 299 using protocol and method=GET', () => {
-      httpRequest.callsFake((options, callback) => {
-        httpResponse.statusCode = 200
-        callback(httpResponse)
-
-        return httpEmitter
+        return promiseDataTo(protoConfig)
+          .then((stats) => {
+            expect(stats.code).to.equal(200)
+            expect(stats).to.have.property('resTxt', '')
+            expect(stats).to.not.have.property('err')
+          })
       })
-
-      const { promiseDataTo } = loadLib()
-      const protoConfig = clone(config)
-      delete protoConfig.http
-      protoConfig.protocol = 'http:'
-      protoConfig.method = 'GET'
-
-      return promiseDataTo(protoConfig)
-        .then((stats) => {
-          expect(stats.code).to.equal(200)
-          expect(stats).to.have.property('resTxt', '')
-          expect(stats).to.not.have.property('err')
-        })
     })
 
     it('should success when status is between 200 and 299 and response is GZIP', () => {
@@ -217,7 +226,7 @@ describe('promise-data-to', () => {
 
       const { promiseDataTo } = loadLib()
 
-      return promiseDataTo(config, {})
+      return promiseDataTo(endpoint, {})
         .then((stats) => {
           expect(stats.code).to.equal(200)
           expect(stats).to.have.property('resTxt', expected)
@@ -238,7 +247,7 @@ describe('promise-data-to', () => {
 
       const secret = Math.random()
 
-      return promiseDataTo(config, 'something')
+      return promiseDataTo(endpoint, 'something')
         .catch((error) => {
           expect(error).to.be.instanceof(Error)
           expect(error).to.have.property('message', 'incorrect header check')
@@ -260,7 +269,7 @@ describe('promise-data-to', () => {
 
       const secret = Math.random()
 
-      return promiseDataTo(config, '')
+      return promiseDataTo(endpoint, '')
         .catch((error) => {
           expect(error).to.be.instanceof(Error)
           expect(error).to.have.property('message', '400 Status')
@@ -308,11 +317,11 @@ describe('promise-data-to', () => {
 
         const { promiseDataTo } = loadLib()
 
-        return promiseDataTo(config, dataObject)
+        return promiseDataTo(endpoint, dataObject)
           .then(thenFunction)
-          .then(() => promiseDataTo(config, dataArray))
+          .then(() => promiseDataTo(endpoint, dataArray))
           .then(thenFunction)
-          .then(() => promiseDataTo(config, dataString, invalidAttempt))
+          .then(() => promiseDataTo(endpoint, dataString, invalidAttempt))
           .then(thenFunction)
           .then(() => {
             expect(thenFunction).to.have.property('calledThrice', true)
@@ -322,12 +331,10 @@ describe('promise-data-to', () => {
     })
 
     context('when status is is between 300 and 399', () => {
-      beforeEach(() => {
-      })
+      // beforeEach(() => {})
 
       it('should fail', () => {
-        const
-          data = [{ a: 1, b: 2, c: 3 }]
+        const data = [{ a: 1, b: 2, c: 3 }]
 
         const expectedData = JSON.stringify(data)
 
@@ -339,7 +346,7 @@ describe('promise-data-to', () => {
         })
 
         const { promiseDataTo } = loadLib()
-        return promiseDataTo(config, data)
+        return promiseDataTo(endpoint, data)
           .then((stats) => {
             expect(stats.code).to.equal(302)
             expect(stats).to.have.property('err')
@@ -368,7 +375,7 @@ describe('promise-data-to', () => {
         })
 
         const { promiseDataTo } = loadLib()
-        promiseDataTo(config, data)
+        promiseDataTo(endpoint, data)
           .catch((stats) => {
             expect(stats).to.have.property('err')
             expect(stats).to.have.property('resTxt', expectedData)
@@ -402,7 +409,7 @@ describe('promise-data-to', () => {
         expect(lib).to.have.property('RETRY_TIMEOUT_MS', 1)
 
         const { promiseDataTo } = loadLib()
-        promiseDataTo(config, data)
+        promiseDataTo(endpoint, data)
           .catch((stats) => {
             expect(stats).to.have.property('err')
             expect(stats).to.not.have.property('resTxt', expectedData)

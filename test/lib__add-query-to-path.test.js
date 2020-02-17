@@ -7,10 +7,6 @@ describe('lib/addQueryToPath.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
 
-  // { clone }    = require('@everymundo/simple-clone'),
-  // cleanrequire = require('@everymundo/cleanrequire'),
-  // noop = () => { },
-
   const loadLib = () => require('../lib/add-query-to-path')
 
   // eslint-disable-next-line one-var-declaration-per-line
