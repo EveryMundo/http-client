@@ -1,2 +1,5 @@
 package-lock.json
 temp/**
+coverage/*
+.nyc_output/*
+test/*
