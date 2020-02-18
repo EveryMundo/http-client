@@ -162,6 +162,38 @@ describe('promise-data-to', () => {
           })
       })
 
+      it('should match resTxt and responseText from response', () => {
+        const data = { a: 1, b: 2, c: 3 }
+
+        const expectedData = JSON.stringify(data)
+        const { promiseDataTo } = require('../lib/promise-data-to')
+        const url = 'http://lala.com/something/else?a=10&b=20'
+
+        return promiseDataTo(url, data, { headers: { Authorization: 'something' } })
+          .then((response) => {
+            expect(response.code).to.equal(200)
+            expect(response).to.have.property('resTxt', expectedData)
+            expect(response).to.have.property('responseText', expectedData)
+            expect(response).to.not.have.property('err')
+          })
+      })
+
+      it('should match statusCode and code from response', () => {
+        const data = { a: 1, b: 2, c: 3 }
+
+        const expectedData = JSON.stringify(data)
+        const { promiseDataTo } = require('../lib/promise-data-to')
+        const url = 'http://lala.com/something/else?a=10&b=20'
+
+        return promiseDataTo(url, data, { headers: { Authorization: 'something' } })
+          .then((response) => {
+            expect(response.code).to.equal(200)
+            expect(response).to.have.property('resTxt', expectedData)
+            expect(response).to.have.property('statusCode', 200)
+            expect(response).to.not.have.property('err')
+          })
+      })
+
       it('should success when status is between 200 and 299 using protocol', () => {
         const data = { a: 1, b: 2, c: 3 }
         const expectedData = JSON.stringify(data)
