@@ -37,8 +37,8 @@ describe('index.js', () => {
     it('should call promiseDataTo', () => {
       const { promiseGet } = loadLib()
 
-      const config = parseUrl('http://test.com/somepath')
-
+      const config = parseUrl('http://user@test.com/somepath')
+      config.auth // Forcing get auth to get 100% coverage
       return promiseGet(config)
         .then(() => {
           expect(promiseDataToLib.promiseDataTo).to.have.property('calledOnce', true)
