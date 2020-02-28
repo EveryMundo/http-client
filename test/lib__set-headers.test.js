@@ -26,6 +26,18 @@ describe('lib/set-headers.js', () => {
       })
     })
 
+    context('When content-type is set to null', () => {
+      it('should have no content-type header', () => {
+        const headers = {
+          'content-type': 'null'
+        }
+
+        setHeaders(headers)
+
+        expect(headers).to.not.have.property('content-type')
+      })
+    })
+
     context('When content-type is preset', () => {
       it('should not change the content-type sent', () => {
         const headers = { 'content-type': 'application/something-else' }
