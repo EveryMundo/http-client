@@ -134,7 +134,6 @@ describe('promise-data-to', () => {
       httpRequest.callsFake((options, callback) => {
         httpResponse.statusCode = 200
         callback(httpResponse)
-
         return httpEmitter
       })
 
@@ -351,7 +350,7 @@ describe('promise-data-to', () => {
     context('when status >= 400', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAX_RETRY_ATTEMPTS').value('1')
-        box.stub(process.env, 'RETRY_TIMEOUT_MS').value('0')
+        box.stub(process.env, 'RETRY_TIMEOUT_MS').value(null)
       })
 
       it('should fail', (done) => {
@@ -374,6 +373,29 @@ describe('promise-data-to', () => {
             expect(stats).to.have.property('resTxt', expectedData)
             expect(stats.code).to.equal(404)
             done()
+          })
+      })
+    })
+
+    context('when times out', () => {
+      beforeEach(() => {
+        box.stub(process.env, 'MAX_RETRY_ATTEMPTS').value('1')
+        box.stub(process.env, 'RETRY_TIMEOUT_MS').value('1')
+      })
+
+      it('should fail', () => {
+        const socket = new EventEmitter()
+        socket.setTimeout = (timeMS) => socket.emit('timeout')
+        httpEmitter.abort = sinon.spy()
+        httpRequest.callsFake((options, callback) => {
+          callback(httpResponse)
+          return httpEmitter
+        })
+        const { promiseDataTo } = loadLib()
+        promiseDataTo(config, {})
+          .then(res => {
+            httpEmitter.emit('socket', socket)
+            expect(httpRequest.abort).to.have.property('calledOnce', true)
           })
       })
     })
@@ -422,7 +444,7 @@ describe('promise-data-to', () => {
     it('should set the default values', () => {
       const lib = cleanrequire('../lib/promise-data-to')
       expect(lib).to.have.property('MAX_RETRY_ATTEMPTS', 3)
-      expect(lib).to.have.property('RETRY_TIMEOUT_MS', 500)
+      expect(lib).to.have.property('RETRY_TIMEOUT_MS', null)
     })
   })
 })
