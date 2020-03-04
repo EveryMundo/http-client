@@ -39,6 +39,12 @@ jspm_packages/
 # Typescript v1 declaration files
 typings/
 
+# VS code generated files
+.vscode/
+
+# MacOs generated files
+.DS_Store
+
 # Optional npm cache directory
 .npm
 
