@@ -381,6 +381,7 @@ describe('promise-data-to', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAX_RETRY_ATTEMPTS').value('1')
         box.stub(process.env, 'RETRY_TIMEOUT_MS').value('1')
+        box.stub(process.env, 'REQUEST_TIMEOUT_MS').value('1')
       })
 
       it('should fail', () => {
@@ -404,6 +405,7 @@ describe('promise-data-to', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAX_RETRY_ATTEMPTS').value('2')
         box.stub(process.env, 'RETRY_TIMEOUT_MS').value('1')
+        delete process.env.REQUEST_TIMEOUT_MS
       })
 
       it('Errors with a connection error', (done) => {
