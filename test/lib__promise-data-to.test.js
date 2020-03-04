@@ -437,14 +437,14 @@ describe('promise-data-to', () => {
 
   context('when env vars don\'t have value', () => {
     beforeEach(() => {
-      box.stub(process.env, 'MAX_RETRY_ATTEMPTS').value('')
-      box.stub(process.env, 'RETRY_TIMEOUT_MS').value('')
+      delete process.env.RETRY_TIMEOUT_MS
+      delete process.env.MAX_RETRY_ATTEMPTS
     })
 
     it('should set the default values', () => {
       const lib = cleanrequire('../lib/promise-data-to')
       expect(lib).to.have.property('MAX_RETRY_ATTEMPTS', 3)
-      expect(lib).to.have.property('RETRY_TIMEOUT_MS', null)
+      expect(lib).to.have.property('RETRY_TIMEOUT_MS', undefined)
     })
   })
 })
