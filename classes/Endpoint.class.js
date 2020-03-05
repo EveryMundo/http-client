@@ -50,7 +50,7 @@ class Endpoint extends EMUrl {
 
   set headers (headers) {
     if (headers != null && !(headers instanceof Object)) {
-      throw new Error(`headers must be an instance of Object! Got a ${headers.constructor.name}`)
+      throw new Error(`headers must be an instance of Object! Got a ${headers.constructor.name} [${headers}]`)
     }
 
     return (this._headers = new Headers(headers))

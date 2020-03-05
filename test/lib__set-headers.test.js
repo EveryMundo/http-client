@@ -17,12 +17,12 @@ describe('lib/set-headers.js', () => {
     const { setHeaders } = require('../lib/set-headers')
 
     context('When content-type is not set', () => {
-      it('should set content-type to JSON', () => {
+      it('should no longer set content-type to application/json', () => {
         const headers = {}
 
         setHeaders(headers)
 
-        expect(headers).to.have.property('content-type', 'application/json')
+        expect(headers).to.not.have.property('content-type', 'application/json')
       })
     })
 

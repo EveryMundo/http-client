@@ -3,7 +3,7 @@
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
-describe('index.js', () => {
+describe.skip('lib/url-to-endpoint.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
   const loadLib = () => require('../lib/url-to-endpoint')

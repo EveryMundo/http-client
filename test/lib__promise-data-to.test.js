@@ -149,10 +149,12 @@ describe('promise-data-to', () => {
           'content-length': 19,
           authorization: 'something'
         }
-        const { promiseDataTo } = loadLib()
-        const url = 'http://lala.com/something/else?a=10&b=20'
 
-        return promiseDataTo(url, data, { headers: { Authorization: 'something' } })
+        const { promiseDataTo } = require('../lib/promise-data-to')
+        const url = 'http://lala.com/something/else?a=10&b=20'
+        const headers = { Authorization: 'something', 'content-type': 'application/json' }
+
+        return promiseDataTo(url, data, { headers })
           .then((response) => {
             expect(response.code).to.equal(200)
             expect(response).to.have.property('resTxt', expectedData)
