@@ -29,6 +29,7 @@ class Endpoint extends EMUrl {
     // this.path = path
     this.endpoint = this.href
     this.method = undefined
+    this.timeout = undefined
 
     if (this.auth) {
       this._headers.set('authorization', this.auth.replace(':', ' '))

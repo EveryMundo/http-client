@@ -49,6 +49,7 @@ describe('promise-data-to', () => {
       emitter.response = response
       emitter.write = data => response.emit('data', Buffer.from(data))
       emitter.end = () => response.emit('end')
+      emitter.abort = sinon.spy(() => response.emit('end'))
 
       return emitter
     }
@@ -318,6 +319,9 @@ describe('promise-data-to', () => {
 
       beforeEach(() => {
         box.stub(process.env, 'SIMULATE').value('1')
+        if (!process.env.REQUEST_TIMEOUT_MS) process.env.REQUEST_TIMEOUT_MS = ''
+
+        box.stub(process.env, 'REQUEST_TIMEOUT_MS').value('1000')
         spy(simulateLib, 'simulatedResponse')
       })
 
@@ -389,6 +393,56 @@ describe('promise-data-to', () => {
       })
     })
 
+    context('when it times out', () => {
+      let socket
+
+      beforeEach(() => {
+        socket = new EventEmitter()
+        socket.setTimeout = () => socket.emit('timeout')
+        httpEmitter.abort = sinon.spy()
+        httpRequest.callsFake((options, callback) => {
+          callback(httpResponse)
+
+          return httpEmitter
+        })
+      })
+
+      it('should fail', () => {
+        // const socket = new EventEmitter()
+        // socket.setTimeout = (timeMS) => socket.emit('timeout')
+        // httpEmitter.abort = sinon.spy()
+        // httpRequest.callsFake((options, callback) => {
+        //   callback(httpResponse)
+
+        //   return httpEmitter
+        // })
+
+        const { promiseDataTo } = require('../lib/promise-data-to')
+        const myEndpoint = Endpoint.clone(endpoint)
+        myEndpoint.timeout = 1
+        return promiseDataTo(myEndpoint, {})
+          .then(() => {
+            httpEmitter.emit('socket', socket)
+            expect(httpEmitter.abort).to.have.property('calledOnce', true)
+          })
+      })
+
+      context('when timeout is not a Number', () => {
+        it('should throw an Error', async () => {
+          const { promiseDataTo } = require('../lib/promise-data-to')
+          const myEndpoint = Endpoint.clone(endpoint)
+          myEndpoint.timeout = 'XX'
+
+          return promiseDataTo(myEndpoint, {})
+            .then(() => { throw new Error('Not Expected Error') })
+            .catch((error) => {
+              expect(error).to.be.instanceof(Error)
+              expect(error).to.have.property('message', `timeout param is not a number [${myEndpoint.timeout}]`)
+            })
+        })
+      })
+    })
+
     context('when status >= 400', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAX_RETRY_ATTEMPTS').value('1')
@@ -455,15 +509,26 @@ describe('promise-data-to', () => {
   })
 
   context('when env vars don\'t have value', () => {
+    let MAX_RETRY_ATTEMPTS
+    let RETRY_TIMEOUT_MS
+
     beforeEach(() => {
-      box.stub(process.env, 'MAX_RETRY_ATTEMPTS').value('')
-      box.stub(process.env, 'RETRY_TIMEOUT_MS').value('')
+      MAX_RETRY_ATTEMPTS = process.env.MAX_RETRY_ATTEMPTS
+      delete process.env.MAX_RETRY_ATTEMPTS
+
+      RETRY_TIMEOUT_MS = process.env.RETRY_TIMEOUT_MS
+      delete process.env.RETRY_TIMEOUT_MS
     })
 
     it('should set the default values', () => {
       const lib = cleanrequire('../lib/promise-data-to')
       expect(lib).to.have.property('MAX_RETRY_ATTEMPTS', 3)
-      expect(lib).to.have.property('RETRY_TIMEOUT_MS', 500)
+      expect(lib).to.have.property('RETRY_TIMEOUT_MS', undefined)
+    })
+
+    afterEach(() => {
+      process.env.MAX_RETRY_ATTEMPTS = MAX_RETRY_ATTEMPTS
+      process.env.RETRY_TIMEOUT_MS = RETRY_TIMEOUT_MS
     })
   })
 })
