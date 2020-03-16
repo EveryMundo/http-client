@@ -58,23 +58,23 @@ describe('lib/set-headers.js', () => {
     })
 
     context('When compress is NOT present', () => {
-      it('should not set content-encoding', () => {
+      it('should not set x-compression', () => {
         const headers = {}
 
         setHeaders(headers)
 
-        expect(headers).to.not.have.property('content-encoding')
+        expect(headers).to.not.have.property('x-compression')
       })
     })
 
     context('When compress is present', () => {
-      it('should set content-encoding its value', () => {
+      it('should set x-compression its value', () => {
         const headers = {}
         const compress = 'gzip'
 
         setHeaders(headers, null, compress)
 
-        expect(headers).to.have.property('content-encoding', compress)
+        expect(headers).to.have.property('x-compression', compress)
       })
     })
   })

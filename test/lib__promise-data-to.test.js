@@ -89,9 +89,8 @@ describe('promise-data-to', () => {
         })
 
         it('should call setHeaders passing the correct arguments', () => {
-          const { setHeaders } = libSetHeaders
           const data = { a: 1, b: 2, c: 3 }
-          const expectedData = require('zlib').gzipSync(JSON.stringify(data))
+          const expectedData = require('zlib').gzipSync(JSON.stringify(data)).toString('base64')
 
           const { promiseDataTo } = loadLib()
           const customConfig = Endpoint.clone(endpoint)
@@ -102,10 +101,9 @@ describe('promise-data-to', () => {
 
           return promiseDataTo(customConfig, data)
             .then(() => {
-              expect(setHeaders).to.have.property('calledOnce', true)
-              // expect(libSetHeaders.setHeaders.calledWith(headers, expectedData, 'gzip')).to.be.true;
-              sinon.assert.calledWith(setHeaders, headers, expectedData, 'gzip')
-              // expect(.calledWith(headers, expectedData, 'gzip')).to.be.true;
+              expect(libSetHeaders.setHeaders).to.have.property('calledOnce', true)
+
+              expect(libSetHeaders.setHeaders.args[0]).to.deep.equal([headers, expectedData, 'gzip'])
             })
         })
       })

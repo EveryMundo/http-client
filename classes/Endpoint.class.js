@@ -46,7 +46,7 @@ class Endpoint extends EMUrl {
       })
     }
 
-    this.compress = this._headers.get('content-encoding')
+    this.compress = this._headers.get('x-compression')
   }
 
   set headers (headers) {

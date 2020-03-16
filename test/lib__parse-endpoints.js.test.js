@@ -151,7 +151,7 @@ describe('lib/parse-endpoints.js', () => {
         box.stub(process.env, 'MAIN_ENDPOINT')
           .value('http://Bearer:token@test.com/some/path')
         box.stub(process.env, 'MAIN_ENDPOINT_HEADERS')
-          .value('{"content-type":"application/xml","content-encoding":"gzip"}')
+          .value('{"content-type":"application/xml","x-compression":"gzip"}')
       })
 
       it('should return an object with the expected properties', () => {
@@ -165,7 +165,7 @@ describe('lib/parse-endpoints.js', () => {
             headers: {
               authorization: 'Bearer token',
               'content-type': 'application/xml',
-              'content-encoding': 'gzip'
+              'x-compression': 'gzip'
             },
             host: 'test.com',
             path: '/some/path',
