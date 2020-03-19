@@ -20,20 +20,16 @@ class Endpoint extends EMUrl {
   constructor (_url, headers = _url.headers, agent = _url.agent) {
     const url = _url.url || _url
     super(url)
-    // const { protocol, hostname, port, path, auth } = parseUrl(url)
+
     this.http = protocols[this.protocol]
     this.agent = agent
     this.host = this.hostname
     this.headers = headers
-    // this.port = port
-    // this.path = path
-    this.endpoint = this.href
     this.method = undefined
     this.timeout = undefined
 
-    if (this.auth) {
+    if (this.username) {
       this._headers.set('authorization', this.auth.replace(':', ' '))
-      this.endpoint = this.href = this.href.replace(`${this.auth}@`, '')
     }
 
     if (!this.agent && this._headers.has('keep-alive')) {
@@ -47,6 +43,14 @@ class Endpoint extends EMUrl {
     }
 
     this.compress = this._headers.get('x-compression')
+  }
+
+  get endpoint () {
+    if (this.username) {
+      return this.href.replace(`${this.auth}@`, '')
+    }
+
+    return this.href
   }
 
   set headers (headers) {
