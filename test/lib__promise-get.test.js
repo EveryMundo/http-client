@@ -7,58 +7,41 @@ describe('index.js', () => {
   const { parseUrl } = require('../lib/parse-url')
   const sinon = require('sinon')
   const { expect } = require('chai')
-  const cleanrequire = require('@everymundo/cleanrequire')
-
-  const loadLib = () => cleanrequire('../lib/promise-get')
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
   beforeEach(() => {
     box = sinon.createSandbox()
-    // ['log', 'info', /* 'debug',  */'error']
-    //   .forEach(method => box.stub(logr, method).callsFake(noop))
   })
 
   afterEach(() => { box.restore() })
 
   context('promiseGet', () => {
-    let promiseDataToLib
+    const promiseDataToLib = require('../lib/promise-data-to')
+    const { promiseGet } = require('../lib/promise-get')
 
     beforeEach(() => {
-      promiseDataToLib = cleanrequire('../lib/promise-data-to')
-      box.stub(promiseDataToLib, 'promiseDataTo').callsFake(arg => Promise.resolve(arg))
+      box.stub(promiseDataToLib, 'promiseDataTo').callsFake((...args) => Promise.resolve(args))
     })
 
-    it('should call promiseDataTo', () => {
-      const { promiseGet } = loadLib()
-
+    it('should call promiseDataTo', async () => {
       const config = parseUrl('http://password@test.com/somepath')
 
-      return promiseGet(config)
-        .then(() => {
-          expect(promiseDataToLib.promiseDataTo).to.have.property('calledOnce', true)
-        })
+      await promiseGet(config)
+
+      expect(promiseDataToLib.promiseDataTo).to.have.property('calledOnce', true)
     })
 
-    it('should call promiseDataTo', () => {
+    it('should return method GET', async () => {
       const { promiseGet } = require('../lib/promise-get')
 
       const config = parseUrl('http://test.com/somepath')
       // eslint-disable-next-line one-var-declaration-per-line
-      let protocol, http, host, port, query, path, endpoint, headers, agent, maxRetry
-      const expected = { protocol, http, host, port, query, path, endpoint, headers, agent, maxRetry, method: 'GET' }
 
-      Object.keys(expected).forEach((key) => {
-        if (key in expected) expected[key] = config[key]
-      })
+      const result = await promiseGet(config)
 
-      return promiseGet(config)
-        .then((arg) => {
-          expected.method = 'GET'
-
-          expect(arg).to.deep.equal(expected)
-        })
+      expect(result[2]).to.deep.equal({ method: 'GET' })
     })
   })
 })
