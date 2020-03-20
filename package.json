@@ -46,6 +46,6 @@
     "standard": "^14.3.3"
   },
   "dependencies": {
-    "@everymundo/simple-logr": "^2.1.1"
+    "@everymundo/simple-logr": "^2.2.2"
   }
 }
