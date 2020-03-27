@@ -135,7 +135,7 @@ describe('promise-data-to', () => {
           .then((stats) => {
             expect(stats.code).to.equal(200)
             expect(stats).to.have.property('resTxt', expectedData)
-            expect(stats).to.not.have.property('err')
+            expect(stats).to.have.property('err', undefined)
           })
       })
 
@@ -159,7 +159,7 @@ describe('promise-data-to', () => {
             expect(response).to.have.property('resTxt', expectedData)
             expect(response).to.have.property('requestHeaders')
             expect(response.requestHeaders).to.deep.equal(expectedRequestHeaders)
-            expect(response).to.not.have.property('err')
+            expect(response).to.have.property('err', undefined)
           })
       })
 
@@ -175,7 +175,7 @@ describe('promise-data-to', () => {
             expect(response.code).to.equal(200)
             expect(response).to.have.property('resTxt', expectedData)
             expect(response).to.have.property('responseText', expectedData)
-            expect(response).to.not.have.property('err')
+            expect(response).to.have.property('err', undefined)
           })
       })
 
@@ -191,7 +191,7 @@ describe('promise-data-to', () => {
             expect(response.code).to.equal(200)
             expect(response).to.have.property('resTxt', expectedData)
             expect(response).to.have.property('statusCode', 200)
-            expect(response).to.not.have.property('err')
+            expect(response).to.have.property('err', undefined)
           })
       })
 
@@ -205,7 +205,7 @@ describe('promise-data-to', () => {
           .then((stats) => {
             expect(stats.code).to.equal(200)
             expect(stats).to.have.property('resTxt', expectedData)
-            expect(stats).to.not.have.property('err')
+            expect(stats).to.have.property('err', undefined)
           })
       })
 
@@ -222,7 +222,7 @@ describe('promise-data-to', () => {
           .then((stats) => {
             expect(stats.code).to.equal(200)
             expect(stats).to.have.property('resTxt', expectedData)
-            expect(stats).to.not.have.property('err')
+            expect(stats).to.have.property('err', undefined)
           })
       })
 
@@ -237,37 +237,117 @@ describe('promise-data-to', () => {
           .then((stats) => {
             expect(stats.code).to.equal(200)
             expect(stats).to.have.property('resTxt', '')
-            expect(stats).to.not.have.property('err')
+            expect(stats).to.have.property('err', undefined)
           })
       })
     })
 
-    it('should success when status is between 200 and 299 and response is GZIP', () => {
+    context('READ compressed response', () => {
       const expected = JSON.stringify({ name: 'Daniel', awesome: true })
+      const { promiseDataTo } = require('../lib/promise-data-to')
 
-      httpEmitter.write = function write () {
-        this.response.emit('data', zlib.gzipSync(expected))
-      }
+      it('should properly decompress response when content-encoding header is GZIP', async () => {
+        httpEmitter.write = function write () {
+          this.response.emit('data', zlib.gzipSync(expected))
+        }
 
-      httpRequest.callsFake((options, callback) => {
-        httpResponse.statusCode = 200
-        httpResponse.headers = { 'content-encoding': 'gzip' }
-        callback(httpResponse)
+        httpRequest.callsFake((options, callback) => {
+          httpResponse.statusCode = 200
+          httpResponse.headers = { 'content-encoding': 'gzip' }
+          callback(httpResponse)
 
-        return httpEmitter
+          return httpEmitter
+        })
+
+        const stats = await promiseDataTo(endpoint, {})
+
+        expect(stats.code).to.equal(200)
+        expect(stats).to.have.property('resTxt', expected)
+        expect(stats).to.have.property('err', undefined)
       })
 
-      const { promiseDataTo } = loadLib()
+      it('should properly decompress response when content-encoding header is DEFLATE', async () => {
+        httpEmitter.write = function write () {
+          this.response.emit('data', zlib.deflateSync(expected))
+        }
 
-      return promiseDataTo(endpoint, {})
-        .then((stats) => {
-          expect(stats.code).to.equal(200)
-          expect(stats).to.have.property('resTxt', expected)
-          expect(stats).to.not.have.property('err')
+        httpRequest.callsFake((options, callback) => {
+          httpResponse.statusCode = 200
+          httpResponse.headers = { 'content-encoding': 'deflate' }
+          callback(httpResponse)
+
+          return httpEmitter
         })
+
+        const stats = await promiseDataTo(endpoint, {})
+
+        expect(stats.code).to.equal(200)
+        expect(stats).to.have.property('responseText', expected)
+        expect(stats).to.have.property('err', undefined)
+      })
+
+      it('should properly decompress response when content-encoding header is BR (brotli)', async () => {
+        httpEmitter.write = function write () {
+          this.response.emit('data', zlib.brotliCompressSync(expected))
+        }
+
+        httpRequest.callsFake((options, callback) => {
+          httpResponse.statusCode = 200
+          httpResponse.headers = { 'content-encoding': 'br' }
+          callback(httpResponse)
+
+          return httpEmitter
+        })
+
+        const stats = await promiseDataTo(endpoint, {})
+
+        expect(stats.code).to.equal(200)
+        expect(stats).to.have.property('responseText', expected)
+        expect(stats).to.have.property('err', undefined)
+      })
+
+      it('should properly decompress response when content-encoding header is BR (brotli)', async () => {
+        httpEmitter.write = function write () {
+          this.response.emit('data', zlib.brotliCompressSync(expected))
+        }
+
+        httpRequest.callsFake((options, callback) => {
+          httpResponse.statusCode = 200
+          httpResponse.headers = { 'content-encoding': 'br' }
+          callback(httpResponse)
+
+          return httpEmitter
+        })
+
+        const stats = await promiseDataTo(endpoint, {})
+
+        expect(stats.code).to.equal(200)
+        expect(stats).to.have.property('responseText', expected)
+        expect(stats).to.have.property('err', undefined)
+      })
+
+      it('should not decompress response when content-encoding header none of the expected', async () => {
+        httpEmitter.write = function write () {
+          this.response.emit('data', Buffer.from(expected))
+        }
+
+        httpRequest.callsFake((options, callback) => {
+          httpResponse.statusCode = 200
+          httpResponse.headers = { 'content-encoding': 'something-else' }
+          callback(httpResponse)
+
+          return httpEmitter
+        })
+
+        const stats = await promiseDataTo(endpoint, {})
+
+        expect(stats.code).to.equal(200)
+        expect(stats).to.have.property('responseText', expected)
+        expect(stats).to.have.property('err', undefined)
+      })
     })
 
-    it('should REJECT when status 2** and response GZIP throws and error', () => {
+    it('should REJECT when status 2** and response GZIP throws and error', async () => {
       httpRequest.callsFake((options, callback) => {
         httpResponse.statusCode = 200
         httpResponse.headers = { 'content-encoding': 'gzip' }
@@ -278,16 +358,10 @@ describe('promise-data-to', () => {
 
       const { promiseDataTo } = loadLib()
 
-      const secret = Math.random()
+      const response = await promiseDataTo(endpoint, 'something')
+      const caller = () => response.responseText
 
-      return promiseDataTo(endpoint, 'something')
-        .catch((error) => {
-          expect(error).to.be.instanceof(Error)
-          expect(error).to.have.property('message', 'incorrect header check')
-
-          return secret
-        })
-        .then(res => expect(res).to.equal(secret, 'It did not reject'))
+      expect(caller).to.throw(Error, 'incorrect header check')
     })
 
     it('should reject when status is between 400', () => {
@@ -326,14 +400,10 @@ describe('promise-data-to', () => {
       afterEach(() => { })
 
       it('should succeed', () => {
-        const
-          dataObject = { a: 1, b: 2, c: 3 }
-
+        const dataObject = { a: 1, b: 2, c: 3 }
         const dataArray = [dataObject]
-
         const dataString = JSON.stringify(dataArray)
-
-        const expectedData = '{"success":true,"data":[]}'
+        // const expectedData = '{"success":true,"data":[]}'
 
         const invalidAttempt = NaN
 
@@ -345,10 +415,10 @@ describe('promise-data-to', () => {
 
         const thenFunction = spy((stats) => {
           expect(stats.code).to.equal(222)
-          expect(stats).to.have.property('resTxt', expectedData)
+          // expect(stats).to.have.property('responseText', expectedData)
           expect(stats).to.have.property('start')
           expect(stats).to.have.property('end')
-          expect(stats).to.not.have.property('err')
+          expect(stats).to.have.property('err', undefined)
         })
 
         const { promiseDataTo } = loadLib()

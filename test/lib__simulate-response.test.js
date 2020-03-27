@@ -32,21 +32,17 @@ describe('lib/simulatedResponse.js', () => {
       it('should return the expected object with code 222', () => {
         const start = new Date()
         const endpoint = 'http://test.com'
-        const data = [{ name: 'Daniel' }, { name: 'Ragnar' }]
+        const inputData = [{ name: 'Daniel' }, { name: 'Ragnar' }]
+        const response = simulatedResponse(endpoint, inputData, null, null, start)
 
-        const expected = {
-          code: 222,
-          start,
-          endpoint,
-          resTxt: '{"success":true,"data":[]}',
-          dataType: 'Array',
-          dataLen: 2,
-          end: Date.now()
-        }
-
-        const result = simulatedResponse(start, endpoint, data)
-
-        expect(result).to.deep.equal(expected)
+        expect(response).to.have.property('code', 222)
+        // expect(response).to.have.property('responseText', '{"success":true,"data":[]}')
+        expect(response).to.have.property('start', start)
+        expect(response).to.have.property('end')
+        expect(response.end).to.not.be.undefined
+        expect(response.end).not.to.be.lessThan(start.getTime())
+        expect(response).to.have.property('dataType', 'Array')
+        expect(response).to.have.property('dataLen', 2)
       })
     })
   })
