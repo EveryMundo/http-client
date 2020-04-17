@@ -591,7 +591,7 @@ describe('promise-data-to', () => {
     it('should set the default values', () => {
       const lib = cleanrequire('../lib/promise-data-to')
       expect(lib).to.have.property('MAX_RETRY_ATTEMPTS', 3)
-      expect(lib).to.have.property('RETRY_TIMEOUT_MS', undefined)
+      expect(lib).to.have.property('RETRY_TIMEOUT_MS', 500)
     })
 
     afterEach(() => {
