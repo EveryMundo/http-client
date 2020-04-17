@@ -1,6 +1,6 @@
 {
-  "name": "@everymundo/promise-data-to",
-  "version": "3.0.3",
+  "name": "@everymundo/http-client",
+  "version": "1.0.0",
   "description": "This is a helper to perform POST requests using promises and no external dependencies",
   "main": "index.js",
   "directories": {
@@ -41,11 +41,11 @@
     "chai": "^4.2.0",
     "ghooks": "^2.0.4",
     "mocha": "^7.1.1",
-    "nyc": "^15.0.0",
-    "sinon": "^9.0.1",
+    "nyc": "^15.0.1",
+    "sinon": "^9.0.2",
     "standard": "^14.3.3"
   },
   "dependencies": {
-    "@everymundo/simple-logr": "^2.2.2"
+    "@everymundo/simple-logr": "~2.0.0"
   }
 }
