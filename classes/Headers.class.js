@@ -1,7 +1,6 @@
-class Headers extends Map {
-  #value = undefined
-  #hasChanged = true
+require('../lib/object-polyfill')(Object)
 
+class Headers extends Map {
   constructor (entries) {
     if (Array.isArray(entries) || entries instanceof Headers) {
       super(entries)
@@ -19,6 +18,7 @@ class Headers extends Map {
     }
 
     super.set(name, v)
+    this._hasChanged = true
 
     return this
   }
@@ -28,13 +28,18 @@ class Headers extends Map {
   }
 
   toObject () {
-    if (this.#hasChanged) {
-      this.#value = this.toJSON()
-      this.#hasChanged = false
+    if (this._hasChanged) {
+      this._value = this.toJSON()
+      this._hasChanged = false
     }
 
-    return this.#value
+    return this._value
   }
 }
+
+Object.defineProperties(Headers.prototype, {
+  _value: { value: null, writable: true, enumerable: false },
+  _hasChanged: { value: true, writable: true, enumerable: false }
+})
 
 module.exports = Headers

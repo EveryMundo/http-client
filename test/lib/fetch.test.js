@@ -3,7 +3,7 @@
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
-describe('index.js', () => {
+describe('lib/fetch.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
   // eslint-disable-next-line one-var-declaration-per-line
