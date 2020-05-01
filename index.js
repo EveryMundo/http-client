@@ -1,17 +1,13 @@
+const lazy = require('@danielsan/node-lazy-loader')(module)
+
 module.exports = {
-  get Endpoint  () { return lazyCall(this, 'Endpoint', './classes/Endpoint.class') },
-  get GetEndpoint  () { return lazyCall(this, 'GetEndpoint', './classes/GetEndpoint.class') },
-  get PostEndpoint  () { return lazyCall(this, 'PostEndpoint', './classes/PostEndpoint.class') },
-  get Headers () { return lazyCall(this, 'Headers', './classes/Headers.class') },
-  get fetch () { return lazyCall(this, 'fetch', './lib/fetch', 'fetch') },
-  get promiseDataTo () { return lazyCall(this, 'promiseDataTo', './lib/promise-data-to', 'promiseDataTo') },
-  get parseEndpoints () { return lazyCall(this, 'parseEndpoints', './lib/parse-endpoints', 'parseEndpoints') },
-  get urlToEndpoint () { return lazyCall(this, 'urlToEndpoint', './lib/url-to-endpoint', 'urlToEndpoint') },
-  get promiseGet () { return lazyCall(this, 'promiseGet', './lib/promise-get', 'promiseGet') }
-}
-
-function lazyCall (o, property, file, subProperty) {
-  const value = subProperty == null ? require(file) : require(file)[subProperty]
-
-  return Object.defineProperty(o, property, { value })[property]
+  get Endpoint () { return lazy('Endpoint', './classes/Endpoint.class') },
+  get GetEndpoint () { return lazy('GetEndpoint', './classes/GetEndpoint.class') },
+  get PostEndpoint () { return lazy('PostEndpoint', './classes/PostEndpoint.class') },
+  get Headers () { return lazy('Headers', './classes/Headers.class') },
+  get fetch () { return lazy('fetch', './lib/fetch', 'fetch') },
+  get promiseDataTo () { return lazy('promiseDataTo', './lib/promise-data-to', 'promiseDataTo') },
+  get parseEndpoints () { return lazy('parseEndpoints', './lib/parse-endpoints', 'parseEndpoints') },
+  get urlToEndpoint () { return lazy('urlToEndpoint', './lib/url-to-endpoint', 'urlToEndpoint') },
+  get promiseGet () { return lazy('promiseGet', './lib/promise-get', 'promiseGet') }
 }
