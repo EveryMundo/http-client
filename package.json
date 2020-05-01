@@ -1,6 +1,6 @@
 {
   "name": "@everymundo/http-client",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "This is a helper to perform POST requests using promises and no external dependencies",
   "main": "index.js",
   "directories": {
