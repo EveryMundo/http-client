@@ -9,7 +9,7 @@ npm install @everymundo/promise-data-to
 ## Usage
 ### POST some data
 ```js
-const httpClient = require('@everymundo/promise-data-to')
+const httpClient = require('@everymundo/http-client')
 
 const headers = { 'content-type': 'application/json' }
 const endpoint = new httpClient.PostEndpoint('http://your-host.com/path', headers)
@@ -20,7 +20,7 @@ const res = await httpClient.promiseDataTo(endpoint, data)
 
 ### GET some data
 ```js
-const httpClient = require('@everymundo/promise-data-to')
+const httpClient = require('@everymundo/http-client')
 
 const headers = { 'authorization': 'your token' }
 const endpoint = new httpClient.GetEndpoint('http://your-host.com/path', headers)
@@ -30,7 +30,7 @@ const res = await httpClient.promiseGet(endpoint)
 
 ### POST using the Fetch API
 ```js
-const httpClient = require('@everymundo/promise-data-to')
+const httpClient = require('@everymundo/http-client')
 
 const headers = { 'authorization': 'your token' }
 const res = await httpClient.fetch('http://your-host.com/path', { headers, body: data })
@@ -38,7 +38,7 @@ const res = await httpClient.fetch('http://your-host.com/path', { headers, body:
 
 ### GET using the Fetch API
 ```js
-const { fetch } = require('@everymundo/promise-data-to')
+const { fetch } = require('@everymundo/http-client')
 
 const headers = { 'authorization': 'your token' }
 const res = await fetch('http://your-host.com/path', { headers })
