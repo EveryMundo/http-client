@@ -6,7 +6,7 @@
 describe('index.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
-  // const cleanrequire = require('@everymundo/cleanrequire')
+  const cleanrequire = require('@everymundo/cleanrequire')
   // const loadLib = () => cleanrequire('../index.js')
 
   // const noop = () => { }
@@ -31,9 +31,13 @@ describe('index.js', () => {
       Headers: Function,
       fetch: Function,
       promiseDataTo: Function,
+      promisePost: Function,
+      post: Function,
       parseEndpoints: Function,
       urlToEndpoint: Function,
-      promiseGet: Function
+      promiseGet: Function,
+      get: Function,
+      head: Function
     }
 
     it('should export the expected keys', () => {
@@ -52,6 +56,36 @@ describe('index.js', () => {
       Object.keys(expected).forEach((key) => {
         expect(lib).to.have.property(key)
         expect(lib[key]).to.be.instanceof(expected[key])
+      })
+    })
+
+    context('head', () => {
+      const fetchModule = require('../lib/fetch')
+      let args
+      beforeEach(() => {
+        args = null
+        box.stub(fetchModule, 'fetch').callsFake((...a) => { args = a })
+      })
+
+      it('should call fetch with method HEAD', () => {
+        const lib = cleanrequire('../index.js')
+        lib.head('a', { auth: 'auth' })
+
+        expect(fetchModule.fetch).to.have.property('calledOnce', true)
+        expect(args).to.be.instanceof(Array)
+        expect(args).to.have.property('length', 2)
+        expect(args[1]).to.have.property('method', 'HEAD')
+        expect(args[1]).to.have.property('auth', 'auth')
+      })
+
+      it('should call fetch with method HEAD', () => {
+        const lib = cleanrequire('../index.js')
+        lib.head('a')
+
+        expect(fetchModule.fetch).to.have.property('calledOnce', true)
+        expect(args).to.be.instanceof(Array)
+        expect(args).to.have.property('length', 2)
+        expect(args[1]).to.have.property('method', 'HEAD')
       })
     })
   })
