@@ -1,5 +1,14 @@
-# promise-data-to
-This is a helper to perform POST requests using promises.
+# http-client
+[![Coverage Status](https://coveralls.io/repos/github/EveryMundo/http-client/badge.svg?branch=master)](https://coveralls.io/github/EveryMundo/http-client?branch=master)
+![Node.js CI](https://github.com/EveryMundo/http-client/workflows/Node.js%20CI/badge.svg)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/EveryMundo/http-client/graphs/commit-activity)
+
+This is yet another nodejs promise based ```/https?/``` client.
+
+## Features
+* Automatically retries to send the requests when statusCode > 399
+* Supports compressed POST
+* Supports compressed GET
 
 ## Install
 ```sh
@@ -21,6 +30,18 @@ const res = await httpClient.promisePost(endpoint, data)
 // OR
 const res = await httpClient.post(endpoint, data)
 ```
+
+### POST compressed data
+```js
+const httpClient = require('@everymundo/http-client')
+
+const headers = { 'content-type': 'application/json', 'x-compression': 'gzip' }
+const endpoint = new httpClient.PostEndpoint('http://your-host.com/path', headers)
+
+// because of the x-compression header this will be gzipped after JSON.stringify
+const res = await httpClient.post(endpoint, data)
+```
+
 
 ### GET some data
 ```js
@@ -58,7 +79,6 @@ const headers = { 'authorization': 'your token' }
 const res = await fetch('http://your-host.com/path', { headers })
 ```
 
-
 ### HEAD using the Fetch API
 ```js
 const { fetch } = require('@everymundo/http-client')
@@ -89,6 +109,3 @@ const res = await fetch('http://your-host.com/path', { headers })
     responseHeaders // the headers received from the remote server
 }
 ```
-
-## Some Features
-* Automatically retries to send the requests when statusCode > 399
