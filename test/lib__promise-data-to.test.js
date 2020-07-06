@@ -37,6 +37,9 @@ describe('promise-data-to', () => {
 
     const newEmitter = () => {
       const emitter = new EventEmitter()
+      emitter[Symbol.asyncIterator] = function () {
+        console.log(...arguments)
+      }
       emitter.headers = {}
       emitter.setEncoding = noop
 
