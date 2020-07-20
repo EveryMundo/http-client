@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>@everymundo/http-client by EveryMundo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">@everymundo/http-client</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/EveryMundo/http-client" class="btn">View on GitHub</a>
+      <a href="https://github.com/EveryMundo/http-client/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/EveryMundo/http-client/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="everymundohttp-client" class="anchor" href="#everymundohttp-client" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>@everymundo/http-client</h1>
+<p><img src="https://github.com/EveryMundo/http-client/workflows/Node.js%20CI/badge.svg" alt="Node.js CI"></p>
+<p>This is yet another nodejs promise based <code>/https?/</code> client.</p>
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
+<ul>
+<li>Automatically retries to send the requests when statusCode &gt; 399</li>
+<li>Supports compressed POST</li>
+<li>Supports compressed GET</li>
+</ul>
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h2>
+<div class="highlight highlight-source-shell"><pre>npm install @everymundo/http-client</pre></div>
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+<h3>
+<a id="post-some-data" class="anchor" href="#post-some-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>POST some data</h3>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-s1">httpClient</span> <span class="pl-c1">=</span> <span class="pl-en">require</span><span class="pl-kos">(</span><span class="pl-s">'@everymundo/http-client'</span><span class="pl-kos">)</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-s">'content-type'</span>: <span class="pl-s">'application/json'</span> <span class="pl-kos">}</span>
+<span class="pl-k">const</span> <span class="pl-s1">endpoint</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-c1">PostEndpoint</span><span class="pl-kos">(</span><span class="pl-s">'http://your-host.com/path'</span><span class="pl-kos">,</span> <span class="pl-s1">headers</span><span class="pl-kos">)</span>
+<span class="pl-k">const</span> <span class="pl-s1">data</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-c1">myData</span>:<span class="pl-s">'Something'</span> <span class="pl-kos">}</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-en">promiseDataTo</span><span class="pl-kos">(</span><span class="pl-s1">endpoint</span><span class="pl-kos">,</span> <span class="pl-s1">data</span><span class="pl-kos">)</span>
+<span class="pl-c">// OR</span>
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-en">promisePost</span><span class="pl-kos">(</span><span class="pl-s1">endpoint</span><span class="pl-kos">,</span> <span class="pl-s1">data</span><span class="pl-kos">)</span>
+<span class="pl-c">// OR</span>
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-en">post</span><span class="pl-kos">(</span><span class="pl-s1">endpoint</span><span class="pl-kos">,</span> <span class="pl-s1">data</span><span class="pl-kos">)</span></pre></div>
+<h3>
+<a id="post-compressed-data" class="anchor" href="#post-compressed-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>POST compressed data</h3>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-s1">httpClient</span> <span class="pl-c1">=</span> <span class="pl-en">require</span><span class="pl-kos">(</span><span class="pl-s">'@everymundo/http-client'</span><span class="pl-kos">)</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-s">'content-type'</span>: <span class="pl-s">'application/json'</span><span class="pl-kos">,</span> <span class="pl-s">'x-compression'</span>: <span class="pl-s">'gzip'</span> <span class="pl-kos">}</span>
+<span class="pl-k">const</span> <span class="pl-s1">endpoint</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-c1">PostEndpoint</span><span class="pl-kos">(</span><span class="pl-s">'http://your-host.com/path'</span><span class="pl-kos">,</span> <span class="pl-s1">headers</span><span class="pl-kos">)</span>
+
+<span class="pl-c">// because of the x-compression header this will be gzipped after JSON.stringify</span>
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-en">post</span><span class="pl-kos">(</span><span class="pl-s1">endpoint</span><span class="pl-kos">,</span> <span class="pl-s1">data</span><span class="pl-kos">)</span></pre></div>
+<h3>
+<a id="get-some-data" class="anchor" href="#get-some-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GET some data</h3>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-s1">httpClient</span> <span class="pl-c1">=</span> <span class="pl-en">require</span><span class="pl-kos">(</span><span class="pl-s">'@everymundo/http-client'</span><span class="pl-kos">)</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-s">'authorization'</span>: <span class="pl-s">'your token'</span> <span class="pl-kos">}</span>
+<span class="pl-k">const</span> <span class="pl-s1">endpoint</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-c1">GetEndpoint</span><span class="pl-kos">(</span><span class="pl-s">'http://your-host.com/path'</span><span class="pl-kos">,</span> <span class="pl-s1">headers</span><span class="pl-kos">)</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-en">promiseGet</span><span class="pl-kos">(</span><span class="pl-s1">endpoint</span><span class="pl-kos">)</span>
+<span class="pl-c">// OR</span>
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-en">get</span><span class="pl-kos">(</span><span class="pl-s1">endpoint</span><span class="pl-kos">)</span></pre></div>
+<h3>
+<a id="post-using-the-fetch-api" class="anchor" href="#post-using-the-fetch-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>POST using the Fetch API</h3>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-s1">httpClient</span> <span class="pl-c1">=</span> <span class="pl-en">require</span><span class="pl-kos">(</span><span class="pl-s">'@everymundo/http-client'</span><span class="pl-kos">)</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-s">'authorization'</span>: <span class="pl-s">'your token'</span> <span class="pl-kos">}</span>
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">'http://your-host.com/path'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span> headers<span class="pl-kos">,</span> <span class="pl-c1">body</span>: <span class="pl-s1">data</span> <span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>
+<a id="head-request" class="anchor" href="#head-request" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>HEAD request</h3>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-s1">httpClient</span> <span class="pl-c1">=</span> <span class="pl-en">require</span><span class="pl-kos">(</span><span class="pl-s">'@everymundo/http-client'</span><span class="pl-kos">)</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-s">'authorization'</span>: <span class="pl-s">'your token'</span> <span class="pl-kos">}</span>
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-s1">httpClient</span><span class="pl-kos">.</span><span class="pl-en">head</span><span class="pl-kos">(</span><span class="pl-s">'http://your-host.com/path'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span> headers <span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>
+<a id="get-using-the-fetch-api" class="anchor" href="#get-using-the-fetch-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GET using the Fetch API</h3>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-kos">{</span> fetch <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-en">require</span><span class="pl-kos">(</span><span class="pl-s">'@everymundo/http-client'</span><span class="pl-kos">)</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-s">'authorization'</span>: <span class="pl-s">'your token'</span> <span class="pl-kos">}</span>
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">'http://your-host.com/path'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span> headers <span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h3>
+<a id="head-using-the-fetch-api" class="anchor" href="#head-using-the-fetch-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>HEAD using the Fetch API</h3>
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-kos">{</span> fetch <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-en">require</span><span class="pl-kos">(</span><span class="pl-s">'@everymundo/http-client'</span><span class="pl-kos">)</span>
+
+<span class="pl-k">const</span> <span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span> <span class="pl-s">'authorization'</span>: <span class="pl-s">'your token'</span> <span class="pl-kos">}</span>
+<span class="pl-k">const</span> <span class="pl-s1">res</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">'http://your-host.com/path'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span> headers <span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
+<h2>
+<a id="response-schema" class="anchor" href="#response-schema" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response Schema</h2>
+<div class="highlight highlight-source-js"><pre><span class="pl-kos">{</span>
+    <span class="pl-s1">statusCode</span><span class="pl-kos">,</span> <span class="pl-c">// the response statusCode</span>
+    <span class="pl-s1">code</span><span class="pl-kos">,</span> <span class="pl-c">// alias for statusCode [for backaward compatibility]</span>
+    <span class="pl-s1">err</span><span class="pl-kos">,</span>
+    <span class="pl-s1">method</span><span class="pl-kos">,</span> <span class="pl-c">// Request Method</span>
+    <span class="pl-s1">start</span><span class="pl-kos">,</span> <span class="pl-c">// Date Object captured right before starting the request</span>
+    <span class="pl-s1">end</span>: <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-c">// Int Timestamp from when the request has finished</span>
+    <span class="pl-s1">attempt</span><span class="pl-kos">,</span> <span class="pl-c">// the number of attempts of the retries</span>
+    <span class="pl-s1">endpoint</span><span class="pl-kos">,</span> <span class="pl-c">// the endpoint object either passed or generated from a string</span>
+    <span class="pl-s1">resTxt</span><span class="pl-kos">,</span> <span class="pl-c">// alias for responseText [for backaward compatibility]</span>
+    <span class="pl-s1">responseText</span><span class="pl-kos">,</span> <span class="pl-c">// the response buffer.toString()</span>
+    <span class="pl-s1">buffer</span><span class="pl-kos">,</span> <span class="pl-c">// uncompressed responseBuffer if that one is compressed, otherwise, responseBuffer </span>
+    <span class="pl-s1">responseBuffer</span><span class="pl-kos">,</span> <span class="pl-c">// raw response buffer</span>
+    <span class="pl-s1">dataType</span><span class="pl-kos">,</span> <span class="pl-c">// the name of the constructor of the posted data [Array, Object, String, Buffer]</span>
+    <span class="pl-s1">dataLen</span><span class="pl-kos">,</span> <span class="pl-c">// when posting arrays it shows the number of array items posted</span>
+    <span class="pl-s1">compress</span><span class="pl-kos">,</span> <span class="pl-c">// the type of compression for the POST request, if any. Valid values are gzip and deflate</span>
+    <span class="pl-s1">requestHeaders</span><span class="pl-kos">,</span> <span class="pl-c">// the headers used on the request</span>
+    <span class="pl-s1">responseHeaders</span> <span class="pl-c">// the headers received from the remote server</span>
+<span class="pl-kos">}</span></pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/EveryMundo/http-client">@everymundo/http-client</a> is maintained by <a href="https://github.com/EveryMundo">EveryMundo</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
