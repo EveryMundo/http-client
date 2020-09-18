@@ -12,7 +12,7 @@ This is yet another nodejs promise based ```/https?/``` client.
 
 ## Install
 ```sh
-npm install @everymundo/promise-data-to
+npm install @everymundo/http-client
 ```
 
 ## Usage
