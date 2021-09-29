@@ -33,14 +33,16 @@ const res = await httpClient.post(endpoint, data)
 ```
 
 #### Write methods
-If you want to use PUT or PATCH, just pass the method name on the options object
+If you want to use PUT or PATCH, just pass the method name on the options object, don't forget to use `.Endpoint` when creating the endpoint object
 ```js
 const httpClient = require('@everymundo/http-client')
 
 const headers = { 'content-type': 'application/json' }
-const endpoint = new httpClient.PostEndpoint('http://your-host.com/path', headers)
-const data = { myData:'Something' }
+// Note that httpClient.Endpoint is used instead of .PostEndpoint
+const endpoint = new httpClient.Endpoint('http://your-host.com/path', headers)
+// Here we set the write method desired
 const options = { method: 'PUT'}
+const data = { myData:'Something' }
 const res = await httpClient.promiseDataTo(endpoint, data, options)
 // OR
 const res = await httpClient.promisePost(endpoint, data, options)
