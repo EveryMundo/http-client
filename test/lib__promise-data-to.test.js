@@ -594,6 +594,7 @@ describe('promise-data-to', () => {
         const options = { method: 'PUT' }
         return promiseDataTo(customConfig, data, options)
           .then((stats) => {
+            expect(stats.method).to.equal('PUT')
             expect(stats.code).to.equal(200)
             expect(stats).to.have.property('resTxt', expectedData)
             expect(stats).to.have.property('err', undefined)
