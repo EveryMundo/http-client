@@ -32,6 +32,24 @@ const res = await httpClient.promisePost(endpoint, data)
 const res = await httpClient.post(endpoint, data)
 ```
 
+#### Write methods
+If you want to use PUT or PATCH, just pass the method name on the options object, don't forget to use `.Endpoint` when creating the endpoint object
+```js
+const httpClient = require('@everymundo/http-client')
+
+const headers = { 'content-type': 'application/json' }
+// Note that httpClient.Endpoint is used instead of .PostEndpoint
+const endpoint = new httpClient.Endpoint('http://your-host.com/path', headers)
+// Here we set the write method desired
+const options = { method: 'PUT'}
+const data = { myData:'Something' }
+const res = await httpClient.promiseDataTo(endpoint, data, options)
+// OR
+const res = await httpClient.promisePost(endpoint, data, options)
+// OR
+const res = await httpClient.post(endpoint, data, options)
+```
+
 ### POST compressed data
 ```js
 const httpClient = require('@everymundo/http-client')
@@ -101,7 +119,7 @@ const res = await fetch('http://your-host.com/path', { headers })
     endpoint, // the endpoint object either passed or generated from a string
     resTxt, // alias for responseText [for backaward compatibility]
     responseText, // the response buffer.toString()
-    buffer, // uncompressed responseBuffer if that one is compressed, otherwise, responseBuffer 
+    buffer, // uncompressed responseBuffer if that one is compressed, otherwise, responseBuffer
     responseBuffer, // raw response buffer
     dataType, // the name of the constructor of the posted data [Array, Object, String, Buffer]
     dataLen, // when posting arrays it shows the number of array items posted

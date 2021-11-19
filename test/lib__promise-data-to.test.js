@@ -574,6 +574,33 @@ describe('promise-data-to', () => {
           })
       })
     })
+
+    context('when method is passed on the options object', () => {
+      beforeEach(() => {
+        httpRequest.callsFake((options, callback) => {
+          httpResponse.statusCode = 200
+          callback(httpResponse)
+
+          return httpEmitter
+        })
+      })
+      it('should success when status is between 200 and 299 using http', () => {
+        const data = { a: 1, b: 2, c: 3 }
+
+        const expectedData = JSON.stringify(data)
+        const { promiseDataTo } = loadLib()
+        const customConfig = Endpoint.clone(endpoint)
+        customConfig.headers = undefined
+        const options = { method: 'PUT' }
+        return promiseDataTo(customConfig, data, options)
+          .then((stats) => {
+            expect(stats.method).to.equal('PUT')
+            expect(stats.code).to.equal(200)
+            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.have.property('err', undefined)
+          })
+      })
+    })
   })
 
   context('when env vars don\'t have value', () => {

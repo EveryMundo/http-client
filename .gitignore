@@ -59,3 +59,7 @@ typings/
 
 package-lock.json
 temp/**
+
+
+#vscode
+.vscode
