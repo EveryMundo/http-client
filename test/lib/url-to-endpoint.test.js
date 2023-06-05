@@ -8,7 +8,7 @@ describe('lib/url-to-endpoint', () => {
   const { expect } = require('chai')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
-  const { urlToEndpoint } = require('../../lib/url-to-endpoint')
+  const { urlToEndpoint } = require('../../index')
   const { Endpoint } = require('../../classes/Endpoint.class')
 
   beforeEach(() => {
