@@ -1,90 +1,86 @@
-const EMUrl = require('./EMUrl.class')
-const Headers = require('./Headers.class.js')
-const { parseKeepAlive } = require('../lib/parse-keep-alive-header')
+const BasicEndpoint = require('./BasicEndpoint.class.js')
+const lib = require('../lib/promise-data-to')
 
-const protocols = {
-  'http:': require('http'),
-  'https:': require('https')
-}
+class Endpoint extends BasicEndpoint {
+  post (data, options) { return this.constructor.post(this, data, options) }
+  static post (endpoint, data, options = { method: null }) {
+    options.method = 'POST'
 
-class Endpoint extends EMUrl {
-  static clone (endpoint) {
-    const cloned = new Endpoint(endpoint, endpoint.headers, endpoint.agent)
-
-    cloned.method = endpoint.method
-
-    return cloned
+    return lib.promiseDataTo(endpoint, data, options)
   }
 
-  // _headers = undefined
-  constructor (_url, headers = _url.headers, agent = _url.agent) {
-    const url = _url.url || _url
-    super(url)
+  get (options) { return this.constructor.get(this, options) }
+  static get (endpoint, options = { method: null }) {
+    options.method = 'GET'
 
-    this.http = protocols[this.protocol]
-    this.agent = agent
-    this.host = this.hostname
-    this.headers = headers
-    this.method = undefined
-    this.timeout = undefined
+    return lib.promiseDataTo(endpoint, undefined, options)
+  }
 
-    if (this.username) {
-      this._headers.set('authorization', this.auth.replace(':', ' '))
+  patch (data, options) { return this.constructor.patch(this, data, options) }
+  static patch (url, data, options = { method: null }) {
+    options.method = 'PATCH'
+
+    return lib.promiseDataTo(url, data, options)
+  }
+
+  put (data, options) { return this.constructor.put(this, data, options) }
+  static put (url, data, options = { method: null }) {
+    options.method = 'PUT'
+
+    return lib.promiseDataTo(url, data, options)
+  }
+
+  head (options) { return this.constructor.head(this, options) }
+  static head (url, options = { method: null }) {
+    options.method = 'HEAD'
+
+    return lib.promiseDataTo(url, undefined, options)
+  }
+
+  fetch (options) { return this.constructor.fetch(this, options) }
+  static fetch (url, options = {}) {
+    const {
+      // credentials,
+      headers = {},
+      // referrer,
+      // referrerPolicy,
+      body,
+      // mode,
+      method = body ? 'POST' : 'GET'
+    } = options
+
+    const endpoint = url instanceof Endpoint
+      ? url
+      : new Endpoint(url, headers)
+
+    if (options.referrer != null) {
+      endpoint.headers.set('referrer', options.referrer)
     }
 
-    if (!this.agent && this._headers.has('keep-alive')) {
-      const { max, timeout } = parseKeepAlive(this._headers.get('keep-alive'))
+    endpoint.method = method
 
-      this.agent = new this.http.Agent({
-        keepAlive: true,
-        maxSockets: Math.abs(max) || 50,
-        timeout: Math.abs(timeout) || undefined
-      })
-    }
-
-    this.compress = this._headers.get('x-compression')
-  }
-
-  get endpoint () {
-    if (this.username) {
-      return this.href.replace(`${this.auth}@`, '')
-    }
-
-    return this.href
-  }
-
-  set headers (headers) {
-    if (headers != null && !(headers instanceof Object)) {
-      throw new Error(`headers must be an instance of Object! Got a ${headers.constructor.name} [${headers}]`)
-    }
-
-    return (this._headers = new Headers(headers))
-  }
-
-  get headers () {
-    return this._headers
-  }
-
-  getObject () {
-    return this.toJSON()
-  }
-
-  toJSON () {
-    return {
-      // http: this.http,
-      // agent: this.agent,
-      host: this.host,
-      headers: this.headers.toJSON(),
-      port: this.port,
-      path: this.path,
-      endpoint: this.endpoint,
-      compress: this.compress
-    }
-  }
-
-  toString () {
-    return this.endpoint
+    return lib.promiseDataTo(endpoint, body)
   }
 }
 
-module.exports = Endpoint
+class GetEndpoint extends Endpoint {
+  constructor (url, headers, agent) {
+    super(url, headers, agent)
+
+    this.method = 'GET'
+  }
+}
+
+class PostEndpoint extends Endpoint {
+  constructor (url, headers, agent) {
+    super(url, headers, agent)
+
+    this.method = 'POST'
+  }
+}
+
+module.exports = {
+  Endpoint,
+  GetEndpoint,
+  PostEndpoint
+}
