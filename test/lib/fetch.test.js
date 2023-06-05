@@ -9,8 +9,8 @@ describe('lib/fetch.js', () => {
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
-  const { fetch, httpClient } = require('../../lib/fetch')
-  // const httpClient = require('../../lib/promise-data-to')
+  const { Endpoint } = require('../../classes/Endpoint.class')
+  const httpClient = require('../../lib/promise-data-to')
 
   beforeEach(() => {
     box = sinon.createSandbox()
@@ -26,7 +26,7 @@ describe('lib/fetch.js', () => {
         return {}
       })
 
-      const res = await fetch('http://test.com')
+      const res = await Endpoint.fetch('http://test.com')
       expect(res).to.deep.equal({})
     })
 
@@ -37,7 +37,7 @@ describe('lib/fetch.js', () => {
         return {}
       })
 
-      const res = await fetch('http://test.com', { body: { some: 'Data' } })
+      const res = await Endpoint.fetch('http://test.com', { body: { some: 'Data' } })
       expect(res).to.deep.equal({})
     })
 
@@ -53,7 +53,7 @@ describe('lib/fetch.js', () => {
         return {}
       })
 
-      const res = await fetch(url, { referrer: url })
+      const res = await Endpoint.fetch(url, { referrer: url })
       expect(res).to.deep.equal({})
     })
 

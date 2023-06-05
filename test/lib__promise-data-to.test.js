@@ -2,30 +2,20 @@
 
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+const zlib = require('zlib')
+const sinon = require('sinon')
+const { expect } = require('chai')
+const cleanrequire = require('@everymundo/cleanrequire')
 
-describe('promise-data-to', () => {
-  const sinon = require('sinon')
-  const { spy } = require('sinon')
-  const { expect } = require('chai')
-  const cleanrequire = require('@everymundo/cleanrequire')
-
-  const Endpoint = require('../classes/Endpoint.class')
+describe('lib/promise-data-to', () => {
+  const { Endpoint } = require('../classes/Endpoint.class')
+  const lib = require('../lib/promise-data-to')
   const loadLib = () => cleanrequire('../lib/promise-data-to')
 
   const noop = () => { }
 
-  // eslint-disable-next-line one-var-declaration-per-line
   let box
-
-  // const logr = require('@everymundo/simple-logr')
-  const zlib = require('zlib')
-
-  beforeEach(() => {
-    box = sinon.createSandbox()
-    // ['log', 'info', /* 'debug',  */'error']
-    //   .forEach(method => box.stub(logr, method).callsFake(noop))
-  })
-
+  beforeEach(() => { box = sinon.createSandbox() })
   afterEach(() => { box.restore() })
 
   describe('#promiseDataTo', () => {
@@ -108,6 +98,15 @@ describe('promise-data-to', () => {
         })
       })
 
+      it('should have resTxt equal responseText', async () => {
+        box.stub(console, 'warn')
+        const res = await lib.promiseDataTo(Endpoint.clone(endpoint), {})
+
+        expect(res).to.have.property('resTxt', res.responseText)
+        expect(console.warn).to.have.property('calledOnce', true)
+        expect(console.warn.args[0][0]).to.contain('DEPRECATION WARING!')
+      })
+
       it('should throw an error when an endpoint is falsy', async () => {
         const { promiseDataTo } = loadLib()
         let hasThrown = false
@@ -134,7 +133,7 @@ describe('promise-data-to', () => {
         return promiseDataTo(customConfig, data)
           .then((stats) => {
             expect(stats.code).to.equal(200)
-            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.have.property('responseText', expectedData)
             expect(stats).to.have.property('err', undefined)
           })
       })
@@ -156,14 +155,14 @@ describe('promise-data-to', () => {
         return promiseDataTo(url, data, { headers })
           .then((response) => {
             expect(response.code).to.equal(200)
-            expect(response).to.have.property('resTxt', expectedData)
+            expect(response).to.have.property('responseText', expectedData)
             expect(response).to.have.property('requestHeaders')
             expect(response.requestHeaders).to.deep.equal(expectedRequestHeaders)
             expect(response).to.have.property('err', undefined)
           })
       })
 
-      it('should match resTxt and responseText from response', () => {
+      it('should match responseText and responseText from response', () => {
         const data = { a: 1, b: 2, c: 3 }
 
         const expectedData = JSON.stringify(data)
@@ -173,7 +172,7 @@ describe('promise-data-to', () => {
         return promiseDataTo(url, data, { headers: { Authorization: 'something' } })
           .then((response) => {
             expect(response.code).to.equal(200)
-            expect(response).to.have.property('resTxt', expectedData)
+            expect(response).to.have.property('responseText', expectedData)
             expect(response).to.have.property('responseText', expectedData)
             expect(response).to.have.property('err', undefined)
           })
@@ -189,7 +188,7 @@ describe('promise-data-to', () => {
         return promiseDataTo(url, data, { headers: { Authorization: 'something' } })
           .then((response) => {
             expect(response.code).to.equal(200)
-            expect(response).to.have.property('resTxt', expectedData)
+            expect(response).to.have.property('responseText', expectedData)
             expect(response).to.have.property('statusCode', 200)
             expect(response).to.have.property('err', undefined)
           })
@@ -204,7 +203,7 @@ describe('promise-data-to', () => {
         return promiseDataTo(protoConfig, data)
           .then((stats) => {
             expect(stats.code).to.equal(200)
-            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.have.property('responseText', expectedData)
             expect(stats).to.have.property('err', undefined)
           })
       })
@@ -221,7 +220,7 @@ describe('promise-data-to', () => {
         return promiseDataTo(protoConfig, data)
           .then((stats) => {
             expect(stats.code).to.equal(200)
-            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.have.property('responseText', expectedData)
             expect(stats).to.have.property('err', undefined)
           })
       })
@@ -236,7 +235,7 @@ describe('promise-data-to', () => {
         return promiseDataTo(protoConfig)
           .then((stats) => {
             expect(stats.code).to.equal(200)
-            expect(stats).to.have.property('resTxt', '')
+            expect(stats).to.have.property('responseText', '')
             expect(stats).to.have.property('err', undefined)
           })
       })
@@ -262,7 +261,7 @@ describe('promise-data-to', () => {
         const stats = await promiseDataTo(endpoint, {})
 
         expect(stats.code).to.equal(200)
-        expect(stats).to.have.property('resTxt', expected)
+        expect(stats).to.have.property('responseText', expected)
         expect(stats).to.have.property('err', undefined)
       })
 
@@ -394,7 +393,7 @@ describe('promise-data-to', () => {
         if (!process.env.REQUEST_TIMEOUT_MS) process.env.REQUEST_TIMEOUT_MS = ''
 
         box.stub(process.env, 'REQUEST_TIMEOUT_MS').value('1000')
-        spy(simulateLib, 'simulatedResponse')
+        sinon.spy(simulateLib, 'simulatedResponse')
       })
 
       afterEach(() => { })
@@ -413,7 +412,7 @@ describe('promise-data-to', () => {
           return httpEmitter
         })
 
-        const thenFunction = spy((stats) => {
+        const thenFunction = sinon.spy((stats) => {
           expect(stats.code).to.equal(222)
           // expect(stats).to.have.property('responseText', expectedData)
           expect(stats).to.have.property('start')
@@ -456,7 +455,7 @@ describe('promise-data-to', () => {
           .then((stats) => {
             expect(stats.code).to.equal(302)
             expect(stats).to.have.property('err')
-            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.have.property('responseText', expectedData)
           })
       })
     })
@@ -534,7 +533,7 @@ describe('promise-data-to', () => {
         promiseDataTo(endpoint, data)
           .catch((stats) => {
             expect(stats).to.have.property('err')
-            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.have.property('responseText', expectedData)
             expect(stats.code).to.equal(404)
             done()
           })
@@ -568,7 +567,7 @@ describe('promise-data-to', () => {
         promiseDataTo(endpoint, data)
           .catch((stats) => {
             expect(stats).to.have.property('err')
-            expect(stats).to.not.have.property('resTxt', expectedData)
+            expect(stats).to.not.have.property('responseText', expectedData)
             expect(stats.code).to.equal(599)
             done()
           })
@@ -596,7 +595,7 @@ describe('promise-data-to', () => {
           .then((stats) => {
             expect(stats.method).to.equal('PUT')
             expect(stats.code).to.equal(200)
-            expect(stats).to.have.property('resTxt', expectedData)
+            expect(stats).to.have.property('responseText', expectedData)
             expect(stats).to.have.property('err', undefined)
           })
       })
