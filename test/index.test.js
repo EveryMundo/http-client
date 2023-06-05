@@ -3,24 +3,18 @@
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
-describe('index.js', () => {
-  const sinon = require('sinon')
-  const { expect } = require('chai')
-  const cleanrequire = require('@everymundo/cleanrequire')
-  // const loadLib = () => cleanrequire('../index.js')
+const sinon = require('sinon')
+const { expect } = require('chai')
 
-  // const noop = () => { }
+describe('index.js', () => {
+  const lib = require('../index.js')
+  const httpClient = require('../lib/promise-data-to')
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
   // const logr = require('@everymundo/simple-logr')
-  beforeEach(() => {
-    box = sinon.createSandbox()
-    // ['log', 'info', /* 'debug',  */'error']
-    //   .forEach(method => box.stub(logr, method).callsFake(noop))
-  })
-
+  beforeEach(() => { box = sinon.createSandbox() })
   afterEach(() => { box.restore() })
 
   context('exported keys and types', () => {
@@ -32,60 +26,65 @@ describe('index.js', () => {
       fetch: Function,
       promiseDataTo: Function,
       promisePost: Function,
-      post: Function,
       parseEndpoints: Function,
       urlToEndpoint: Function,
       promiseGet: Function,
       get: Function,
+      post: Function,
+      patch: Function,
+      put: Function,
       head: Function
     }
 
     it('should export the expected keys', () => {
-      const lib = require('../index.js')
-
-      const libKeys = Object.keys(lib)
-
-      const expectedKeys = Object.keys(expected)
+      const expectedKeys = Object.keys(expected).sort()
+      const libKeys = Object.keys(lib).sort()
 
       expect(libKeys).to.deep.equal(expectedKeys)
-    })
 
-    it('should export the expected keys', () => {
-      const lib = require('../index.js')
-
-      Object.keys(expected).forEach((key) => {
+      for (const key of expectedKeys) {
         expect(lib).to.have.property(key)
         expect(lib[key]).to.be.instanceof(expected[key])
-      })
+      }
     })
 
-    context('head', () => {
-      const fetchModule = require('../lib/fetch')
-      let args
-      beforeEach(() => {
-        args = null
-        box.stub(fetchModule, 'fetch').callsFake((...a) => { args = a })
+    context('httpMethods', () => {
+      beforeEach(() => { box.stub(httpClient, 'promiseDataTo') })
+
+      describe('#head', () => {
+        it('should equal Endpoint.head', () => {
+          expect(lib.head).to.equal(lib.Endpoint.head)
+        })
       })
 
-      it('should call fetch with method HEAD', () => {
-        const lib = cleanrequire('../index.js')
-        lib.head('a', { auth: 'auth' })
-
-        expect(fetchModule.fetch).to.have.property('calledOnce', true)
-        expect(args).to.be.instanceof(Array)
-        expect(args).to.have.property('length', 2)
-        expect(args[1]).to.have.property('method', 'HEAD')
-        expect(args[1]).to.have.property('auth', 'auth')
+      describe('#patch', () => {
+        it('should equal Endpoint.patch', () => {
+          expect(lib.patch).to.equal(lib.Endpoint.patch)
+        })
       })
 
-      it('should call fetch with method HEAD', () => {
-        const lib = cleanrequire('../index.js')
-        lib.head('a')
+      describe('#put', () => {
+        it('should equal Endpoint.put', () => {
+          expect(lib.put).to.equal(lib.Endpoint.put)
+        })
+      })
 
-        expect(fetchModule.fetch).to.have.property('calledOnce', true)
-        expect(args).to.be.instanceof(Array)
-        expect(args).to.have.property('length', 2)
-        expect(args[1]).to.have.property('method', 'HEAD')
+      describe('#post', () => {
+        it('should equal Endpoint.post', () => {
+          expect(lib.post).to.equal(lib.Endpoint.post)
+        })
+      })
+
+      describe('#get', () => {
+        it('should equal Endpoint.get', () => {
+          expect(lib.get).to.equal(lib.Endpoint.get)
+        })
+      })
+
+      describe('#get', () => {
+        it('should equal Endpoint.get', () => {
+          expect(lib.get).to.equal(lib.Endpoint.get)
+        })
       })
     })
   })
