@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EveryMundo/promise-data-to.git"
+    "url": "git+https://github.com/EveryMundo/http-client.git"
   },
   "keywords": [
     "nodejs",
@@ -33,9 +33,9 @@
   "author": "Daniel Santana <git@danielsantana.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/EveryMundo/promise-data-to/issues"
+    "url": "https://github.com/EveryMundo/http-client/issues"
   },
-  "homepage": "https://github.com/EveryMundo/promise-data-to#readme",
+  "homepage": "https://github.com/EveryMundo/http-client#readme",
   "devDependencies": {
     "@everymundo/cleanrequire": "^1.2.4",
     "chai": "^4.3.7",
