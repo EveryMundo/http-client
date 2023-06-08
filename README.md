@@ -1,15 +1,15 @@
 # http-client
 [![Coverage Status](https://coveralls.io/repos/github/EveryMundo/http-client/badge.svg?branch=master)](https://coveralls.io/github/EveryMundo/http-client?branch=master)
-![Node.js CI](https://github.com/EveryMundo/http-client/workflows/Node.js%20CI/badge.svg)
+![Node.js CI](https://github.com/EveryMundo/http-client/actions/workflows/test-and-coverage.yml/badge.svg)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/EveryMundo/http-client/graphs/commit-activity)
 [![CodeQL](https://github.com/EveryMundo/http-client/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/EveryMundo/http-client/actions/workflows/codeql-analysis.yml)
 
-This is yet another nodejs promise based ```/https?/``` client.
+This is yet another nodejs async/promise based ```/https?/``` client.
 
 ## Features
 * Automatically retries to send the requests when statusCode > 399
-* Supports compressed POST
-* Supports compressed GET
+* Supports sending compressed data
+* Supports readging compressed data
 
 ## Install
 ```sh
