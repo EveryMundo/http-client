@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@danielsan/node-lazy-loader": "*",
-    "@everymundo/simple-logr": "*"
+    "@everymundo/simple-logr": "*",
+    "flatstr": "^1"
   }
 }
