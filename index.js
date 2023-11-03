@@ -1,7 +1,7 @@
-const lazy = require('@danielsan/node-lazy-loader')(module)
 const { Endpoint, GetEndpoint, PostEndpoint } = require('./classes/Endpoint.class.js')
 const Headers = require('./classes/Headers.class.js')
 const Response = require('./classes/Response.class.js')
+const { parseEndpoints } = require('./lib/parse-endpoints.js')
 
 const urlToEndpoint = (url, headers, agent) => new Endpoint(url, headers || null, agent)
 
@@ -11,7 +11,7 @@ module.exports = {
   PostEndpoint,
   Headers,
   Response,
-  get parseEndpoints () { return lazy('parseEndpoints', './lib/parse-endpoints', 'parseEndpoints') },
+  parseEndpoints,
   urlToEndpoint,
   promiseDataTo: Endpoint.post,
   promiseGet: Endpoint.get,

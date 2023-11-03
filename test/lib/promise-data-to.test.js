@@ -50,15 +50,6 @@ describe('lib/promise-data-to', () => {
       httpEmitter = newHttpEmitter(httpResponse)
     })
 
-    /* const config = {
-      http,
-      host: 'localhost',
-      port: 80,
-      path: '/path',
-      endpoint: 'http://localhost:80/path',
-      headers: { Authorization: 'Authorization' }
-    } */
-
     const endpoint = new Endpoint('http://Authorization@localhost:80/path')
 
     describe('When response is a simple statusCode 200', () => {
@@ -94,8 +85,6 @@ describe('lib/promise-data-to', () => {
 
           const res = await lib.promiseDataTo(customConfig, data)
 
-          // expect(libSetHeaders.setHeaders).to.have.property('calledOnce', true)
-          console.log(res.requestHeaders)
           expect(res.requestHeaders).to.deep.equal(expectedHeaders)
           expect(httpEmitter.write).to.have.property('calledOnce', true)
           expect(httpEmitter.write.args[0][0]).to.equal(expectedData)
