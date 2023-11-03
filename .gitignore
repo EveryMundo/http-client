@@ -63,3 +63,5 @@ temp/**
 
 #vscode
 .vscode
+bun.lockb
+

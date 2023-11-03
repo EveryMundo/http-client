@@ -61,3 +61,4 @@ package-lock.json
 temp/**
 test/**
 .github/**
+bun.lockb
