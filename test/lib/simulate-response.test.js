@@ -14,7 +14,7 @@ describe('lib/simulatedResponse.js', () => {
 
   const noop = () => { }
 
-  const loadLib = () => require('../../lib/simulate-response')
+  const testFile = require('../../lib/simulate-response.js')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
@@ -26,10 +26,10 @@ describe('lib/simulatedResponse.js', () => {
   afterEach(() => { box.restore() })
 
   describe('#simulatedResponse', () => {
-    const { simulatedResponse } = loadLib()
+    const { simulatedResponse } = testFile
 
-    context('when calle with an array', () => {
-      it('should return the expected object with code 222', () => {
+    context('when called with an array', () => {
+      it('should return the expected object with statusCode 222', () => {
         const start = new Date()
         const endpoint = 'http://test.com'
         const inputData = [{ name: 'Daniel' }, { name: 'Ragnar' }]

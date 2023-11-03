@@ -5,11 +5,10 @@
 
 const sinon = require('sinon')
 const { expect } = require('chai')
+const lib = require('../index.js')
+const httpClient = require('../lib/promise-data-to.js')
 
 describe('index.js', () => {
-  const lib = require('../index.js')
-  const httpClient = require('../lib/promise-data-to')
-
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
@@ -23,6 +22,7 @@ describe('index.js', () => {
       GetEndpoint: Function,
       PostEndpoint: Function,
       Headers: Function,
+      Response: Function,
       fetch: Function,
       promiseDataTo: Function,
       promisePost: Function,
