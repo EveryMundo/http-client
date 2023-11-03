@@ -8,9 +8,9 @@ const { expect } = require('chai')
 const cleanrequire = require('@everymundo/cleanrequire')
 
 describe('lib/promise-data-to', () => {
-  const { Endpoint } = require('../classes/Endpoint.class')
-  const lib = require('../lib/promise-data-to')
-  const loadLib = () => cleanrequire('../lib/promise-data-to')
+  const { Endpoint } = require('../../classes/Endpoint.class')
+  const lib = require('../../lib/promise-data-to')
+  const loadLib = () => cleanrequire('../../lib/promise-data-to')
 
   const noop = () => { }
 
@@ -72,7 +72,7 @@ describe('lib/promise-data-to', () => {
       })
 
       context('Calling setHeaders', () => {
-        const libSetHeaders = cleanrequire('../lib/set-headers.js')
+        const libSetHeaders = cleanrequire('../../lib/set-headers.js')
 
         beforeEach(() => {
           box.stub(libSetHeaders, 'setHeaders')
@@ -148,7 +148,7 @@ describe('lib/promise-data-to', () => {
           authorization: 'something'
         }
 
-        const { promiseDataTo } = require('../lib/promise-data-to')
+        const { promiseDataTo } = require('../../lib/promise-data-to')
         const url = 'http://lala.com/something/else?a=10&b=20'
         const headers = { Authorization: 'something', 'content-type': 'application/json' }
 
@@ -166,7 +166,7 @@ describe('lib/promise-data-to', () => {
         const data = { a: 1, b: 2, c: 3 }
 
         const expectedData = JSON.stringify(data)
-        const { promiseDataTo } = require('../lib/promise-data-to')
+        const { promiseDataTo } = require('../../lib/promise-data-to')
         const url = 'http://lala.com/something/else?a=10&b=20'
 
         return promiseDataTo(url, data, { headers: { Authorization: 'something' } })
@@ -182,7 +182,7 @@ describe('lib/promise-data-to', () => {
         const data = { a: 1, b: 2, c: 3 }
 
         const expectedData = JSON.stringify(data)
-        const { promiseDataTo } = require('../lib/promise-data-to')
+        const { promiseDataTo } = require('../../lib/promise-data-to')
         const url = 'http://lala.com/something/else?a=10&b=20'
 
         return promiseDataTo(url, data, { headers: { Authorization: 'something' } })
@@ -226,7 +226,7 @@ describe('lib/promise-data-to', () => {
       })
 
       it('should success when status is between 200 and 299 using protocol and method=GET', () => {
-        const { promiseDataTo } = require('../lib/promise-data-to')
+        const { promiseDataTo } = require('../../lib/promise-data-to')
         const protoConfig = Endpoint.clone(endpoint)
         // protoConfig.http = undefined
         // protoConfig.protocol = 'http:'
@@ -243,7 +243,7 @@ describe('lib/promise-data-to', () => {
 
     context('READ compressed response', () => {
       const expected = JSON.stringify({ name: 'Daniel', awesome: true })
-      const { promiseDataTo } = require('../lib/promise-data-to')
+      const { promiseDataTo } = require('../../lib/promise-data-to')
 
       it('should properly decompress response when content-encoding header is GZIP', async () => {
         httpEmitter.write = function write () {
@@ -386,7 +386,7 @@ describe('lib/promise-data-to', () => {
     })
 
     context('when process.env.SIMULATE is set', () => {
-      const simulateLib = require('../lib/simulate-response')
+      const simulateLib = require('../../lib/simulate-response')
 
       beforeEach(() => {
         box.stub(process.env, 'SIMULATE').value('1')
@@ -484,7 +484,7 @@ describe('lib/promise-data-to', () => {
         //   return httpEmitter
         // })
 
-        const { promiseDataTo } = require('../lib/promise-data-to')
+        const { promiseDataTo } = require('../../lib/promise-data-to')
         const myEndpoint = Endpoint.clone(endpoint)
         myEndpoint.timeout = 1
         return promiseDataTo(myEndpoint, {})
@@ -496,7 +496,7 @@ describe('lib/promise-data-to', () => {
 
       context('when timeout is not a Number', () => {
         it('should throw an Error', async () => {
-          const { promiseDataTo } = require('../lib/promise-data-to')
+          const { promiseDataTo } = require('../../lib/promise-data-to')
           const myEndpoint = Endpoint.clone(endpoint)
           myEndpoint.timeout = 'XX'
 
@@ -559,7 +559,7 @@ describe('lib/promise-data-to', () => {
           return httpEmitter
         })
 
-        const lib = cleanrequire('../lib/promise-data-to')
+        const lib = cleanrequire('../../lib/promise-data-to')
         expect(lib).to.have.property('MAX_RETRY_ATTEMPTS', 2)
         expect(lib).to.have.property('RETRY_TIMEOUT_MS', 1)
 
@@ -615,7 +615,7 @@ describe('lib/promise-data-to', () => {
     })
 
     it('should set the default values', () => {
-      const lib = cleanrequire('../lib/promise-data-to')
+      const lib = cleanrequire('../../lib/promise-data-to')
       expect(lib).to.have.property('MAX_RETRY_ATTEMPTS', 3)
       expect(lib).to.have.property('RETRY_TIMEOUT_MS', 500)
     })

@@ -4,7 +4,7 @@
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
 describe('lib/promise-get.js', () => {
-  const { parseUrl } = require('../lib/parse-url')
+  const { parseUrl } = require('../../lib/parse-url')
   const sinon = require('sinon')
   const { expect } = require('chai')
 
@@ -15,9 +15,9 @@ describe('lib/promise-get.js', () => {
   afterEach(() => { box.restore() })
 
   context('promiseGet', () => {
-    const promiseDataToLib = require('../lib/promise-data-to')
+    const promiseDataToLib = require('../../lib/promise-data-to')
     // const { promiseGet } = require('../lib/promise-get')
-    const lib = require('../index')
+    const lib = require('../../index')
 
     beforeEach(() => {
       box.stub(promiseDataToLib, 'promiseDataTo').callsFake((...args) => Promise.resolve(args))

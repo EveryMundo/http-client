@@ -14,7 +14,7 @@ describe('lib/simulatedResponse.js', () => {
 
   const noop = () => { }
 
-  const loadLib = () => require('../lib/simulate-response')
+  const loadLib = () => require('../../lib/simulate-response')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 

@@ -8,7 +8,7 @@ describe('lib/parse-endpoints.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
 
-  const loadLib = () => require('../lib/parse-endpoints.js')
+  const loadLib = () => require('../../lib/parse-endpoints.js')
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
@@ -27,7 +27,7 @@ describe('lib/parse-endpoints.js', () => {
 
   describe('#parseKeepAlive', () => {
     it('should return an object with the expected properties', () => {
-      const { parseKeepAlive } = require('../lib/parse-keep-alive-header')
+      const { parseKeepAlive } = require('../../lib/parse-keep-alive-header.js')
 
       const headers = { 'keep-alive': 'max=1000, timeout=1000' }
       const res = parseKeepAlive(headers['keep-alive'])
@@ -39,7 +39,7 @@ describe('lib/parse-endpoints.js', () => {
 
   describe('#parseKeepAliveHeader', () => {
     it('should return an object with the expected properties', () => {
-      const { parseKeepAliveHeader } = require('../lib/parse-keep-alive-header')
+      const { parseKeepAliveHeader } = require('../../lib/parse-keep-alive-header.js')
 
       const headers = { 'keep-alive': 'max=1000, timeout=1000' }
       const res = parseKeepAliveHeader(headers)

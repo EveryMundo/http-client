@@ -14,7 +14,7 @@ describe('lib/set-headers.js', () => {
   afterEach(() => { box.restore() })
 
   describe('#setHeaders', () => {
-    const { setHeaders } = require('../lib/set-headers')
+    const { setHeaders } = require('../../lib/set-headers')
 
     context('When content-type is not set', () => {
       it('should no longer set content-type to application/json', () => {
