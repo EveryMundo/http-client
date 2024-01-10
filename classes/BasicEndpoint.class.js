@@ -1,10 +1,9 @@
-const EMUrl = require('./EMUrl.class')
+const EMUrl = require('./EMUrl.class.js')
 const Headers = require('./Headers.class.js')
-const { parseKeepAlive } = require('../lib/parse-keep-alive-header')
 
 const protocols = {
-  'http:': require('http'),
-  'https:': require('https')
+  'http:': require('node:http'),
+  'https:': require('node:https')
 }
 
 class BasicEndpoint extends EMUrl {
@@ -25,7 +24,7 @@ class BasicEndpoint extends EMUrl {
     }
 
     if (!this.agent && this._headers.has('keep-alive')) {
-      const { max, timeout } = parseKeepAlive(this._headers.get('keep-alive'))
+      const { max, timeout } = BasicEndpoint.parseKeepAlive(this._headers.get('keep-alive'))
 
       this.agent = new this.http.Agent({
         keepAlive: true,
@@ -36,6 +35,12 @@ class BasicEndpoint extends EMUrl {
 
     this.compress = this._headers.get('x-compression')
   }
+
+  static parseKeepAlive = keepAlive => keepAlive
+    .split(/[\s,]+/)
+    .map(v => v.split(/[\s=]+/g))
+    .filter(a => a.length === 2 && a[0] && a[1])
+    .reduce((acc, [k, v]) => (acc[k.toLowerCase()] = v) && acc, {})
 
   static clone (endpoint) {
     const cloned = new this(endpoint, endpoint.headers, endpoint.agent)
@@ -86,4 +91,5 @@ class BasicEndpoint extends EMUrl {
     return this.endpoint
   }
 }
+
 module.exports = BasicEndpoint
