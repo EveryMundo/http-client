@@ -62,3 +62,4 @@ temp/**
 test/**
 .github/**
 bun.lockb
+benchmarks/**
