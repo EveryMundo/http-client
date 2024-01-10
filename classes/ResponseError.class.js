@@ -25,6 +25,7 @@ class ResponseError extends Error {
     this.response = response
   }
 
+  get statusCode () { return this.response.code }
   get responseText () { return this.response.responseText }
   get buffer () { return this.response.buffer }
 

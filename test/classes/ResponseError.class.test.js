@@ -51,6 +51,18 @@ describe('ResponseError', () => {
     expect(responeError.stats).to.equal(response)
   }))
 
+  describe('get statusCode', () => it('should return the value of response', () => {
+    const responeError = new ResponseError('Error Message', response)
+
+    expect(responeError.statusCode).to.equal(response.statusCode)
+  }))
+
+  describe('get responseText', () => it('should return the value of response', () => {
+    const responeError = new ResponseError('Error Message', response)
+
+    expect(responeError.responseText).to.equal(response.responseText)
+  }))
+
   describe('get buffer', () => it('should return the value of response', () => {
     const responeError = new ResponseError('Error Message', response)
 
