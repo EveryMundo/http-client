@@ -21,5 +21,6 @@ module.exports = {
   post: Endpoint.post,
   patch: Endpoint.patch,
   put: Endpoint.put,
-  head: Endpoint.head
+  head: Endpoint.head,
+  delete: Endpoint.delete
 }
