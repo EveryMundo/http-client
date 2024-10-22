@@ -71,7 +71,7 @@ describe('classes/Endpoint', () => {
       })
 
       // write methods
-      ;['patch', 'put', 'post'].forEach(method => {
+      ;['patch', 'put', 'post', 'delete'].forEach(method => {
         describe(`#${method}`, () => {
           const upMethod = method.toUpperCase()
           it(`should call promiseDataTo with method ${upMethod}`, async () => {

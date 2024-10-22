@@ -33,7 +33,8 @@ describe('index.js', () => {
       post: Function,
       patch: Function,
       put: Function,
-      head: Function
+      head: Function,
+      delete: Function
     }
 
     it('should export the expected keys', () => {
@@ -66,6 +67,12 @@ describe('index.js', () => {
       describe('#put', () => {
         it('should equal Endpoint.put', () => {
           expect(lib.put).to.equal(lib.Endpoint.put)
+        })
+      })
+
+      describe('#delete', () => {
+        it('should equal Endpoint.delete', () => {
+          expect(lib.delete).to.equal(lib.Endpoint.delete)
         })
       })
 

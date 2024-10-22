@@ -30,6 +30,13 @@ class Endpoint extends BasicEndpoint {
     return lib.promiseDataTo(url, data, options)
   }
 
+  delete (data, options) { return this.constructor.delete(this, data, options) }
+  static delete (url, data, options = { method: null }) {
+    options.method = 'DELETE'
+
+    return lib.promiseDataTo(url, data, options)
+  }
+
   head (options) { return this.constructor.head(this, options) }
   static head (url, options = { method: null }) {
     options.method = 'HEAD'

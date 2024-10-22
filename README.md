@@ -46,7 +46,7 @@ const res = await httpClient.post(endpoint, data)
 
 
 #### Write methods
-If you want to use PUT or PATCH, just pass the method name on the options object, don't forget to use `.Endpoint` when creating the endpoint object
+If you want to use PUT, PATCH or DELETE, just pass the method name on the options object, don't forget to use `.Endpoint` when creating the endpoint object
 ```js
 const httpClient = require('@everymundo/http-client')
 
