@@ -1,5 +1,5 @@
 const BasicEndpoint = require('./BasicEndpoint.class.js')
-const lib = require('../lib/promise-data-to')
+const lib = require('../lib/promise-data-to.js')
 
 class Endpoint extends BasicEndpoint {
   post (data, options) { return this.constructor.post(this, data, options) }

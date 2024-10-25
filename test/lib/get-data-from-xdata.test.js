@@ -8,7 +8,7 @@ describe('lib/get-data-from-xdata.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
 
-  const loadLib = () => require('../../lib/get-data-from-xdata')
+  const loadLib = () => require('../../lib/get-data-from-xdata.js')
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box

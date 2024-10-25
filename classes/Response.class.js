@@ -1,4 +1,4 @@
-const { decompressBuffer } = require('../lib/decompress-buffer')
+const { decompressBuffer } = require('../lib/decompress-buffer.js')
 
 class Response {
   code = undefined

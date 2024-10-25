@@ -7,7 +7,7 @@ describe('lib/addQueryToPath.js', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
 
-  const loadLib = () => require('../../lib/add-query-to-path')
+  const loadLib = () => require('../../lib/add-query-to-path.js')
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
