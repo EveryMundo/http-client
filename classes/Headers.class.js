@@ -1,4 +1,4 @@
-require('../lib/object-polyfill')(Object)
+require('../lib/object-polyfill.js')(Object)
 
 class Headers extends Map {
   constructor (entries) {

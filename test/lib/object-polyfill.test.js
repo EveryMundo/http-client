@@ -6,7 +6,7 @@
 describe('lib/fetch.js', () => {
   const { expect } = require('chai')
 
-  const objectPolyfill = require('../../lib/object-polyfill')
+  const objectPolyfill = require('../../lib/object-polyfill.js')
 
   describe('objectPolyfill', async () => {
     it('should set the property fromEntries', async () => {

@@ -9,7 +9,7 @@ describe('GetEndpoint', () => {
   // eslint-disable-next-line one-var-declaration-per-line
   // let box
 
-  const { Endpoint, GetEndpoint } = require('../../classes/Endpoint.class')
+  const { Endpoint, GetEndpoint } = require('../../classes/Endpoint.class.js')
 
   // beforeEach(() => { box = sinon.createSandbox() })
   // afterEach(() => { box.restore() })

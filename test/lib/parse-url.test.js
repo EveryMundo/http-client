@@ -8,8 +8,8 @@ describe('lib/parse-url', () => {
   const { expect } = require('chai')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
-  const { parseUrl } = require('../../lib/parse-url')
-  const EMUrl = require('../../classes/EMUrl.class')
+  const { parseUrl } = require('../../lib/parse-url.js')
+  const EMUrl = require('../../classes/EMUrl.class.js')
 
   beforeEach(() => {
     box = sinon.createSandbox()

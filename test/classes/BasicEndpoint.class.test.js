@@ -8,8 +8,8 @@ const { expect } = require('chai')
 const http = require('http')
 
 describe('classes/Endpoint', () => {
-  const BasicEndpoint = require('../../classes/BasicEndpoint.class')
-  const EMUrl = require('../../classes/EMUrl.class')
+  const BasicEndpoint = require('../../classes/BasicEndpoint.class.js')
+  const EMUrl = require('../../classes/EMUrl.class.js')
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box

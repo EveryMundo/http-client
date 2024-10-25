@@ -2,12 +2,14 @@
 
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+const sinon = require('sinon')
+const { expect } = require('chai')
+
+const { parseUrl } = require('../../lib/parse-url.js')
+const promiseDataToLib = require('../../lib/promise-data-to.js')
+const lib = require('../../index.js')
 
 describe('lib/promise-get.js', () => {
-  const { parseUrl } = require('../../lib/parse-url')
-  const sinon = require('sinon')
-  const { expect } = require('chai')
-
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 

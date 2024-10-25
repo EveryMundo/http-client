@@ -9,8 +9,8 @@ describe('lib/fetch.js', () => {
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
-  const { Endpoint } = require('../../classes/Endpoint.class')
-  const httpClient = require('../../lib/promise-data-to')
+  const { Endpoint } = require('../../classes/Endpoint.class.js')
+  const httpClient = require('../../lib/promise-data-to.js')
 
   beforeEach(() => {
     box = sinon.createSandbox()

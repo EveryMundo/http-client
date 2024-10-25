@@ -8,8 +8,8 @@ describe('lib/url-to-endpoint', () => {
   const { expect } = require('chai')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
-  const { urlToEndpoint } = require('../../index')
-  const { Endpoint } = require('../../classes/Endpoint.class')
+  const { urlToEndpoint } = require('../../index.js')
+  const { Endpoint } = require('../../classes/Endpoint.class.js')
 
   beforeEach(() => {
     box = sinon.createSandbox()

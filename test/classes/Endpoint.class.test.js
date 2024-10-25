@@ -6,9 +6,9 @@
 describe('classes/Endpoint', () => {
   const sinon = require('sinon')
   const { expect } = require('chai')
-  const { Endpoint } = require('../../classes/Endpoint.class')
-  const EMUrl = require('../../classes/EMUrl.class')
-  const httpClient = require('../../lib/promise-data-to')
+  const { Endpoint } = require('../../classes/Endpoint.class.js')
+  const EMUrl = require('../../classes/EMUrl.class.js')
+  const httpClient = require('../../lib/promise-data-to.js')
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
