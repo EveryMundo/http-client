@@ -18,7 +18,7 @@ describe('lib/addQueryToPath.js', () => {
   describe('#addQueryToPath', () => {
     const { addQueryToPath } = loadLib()
 
-    context('when query is empty', () => {
+    describe('when query is empty', () => {
       it('should return inputPath', () => {
         const query = undefined
         const path = '/something'
@@ -29,7 +29,7 @@ describe('lib/addQueryToPath.js', () => {
       })
     })
 
-    context('when query is an object', () => {
+    describe('when query is an object', () => {
       it('should return the correct concatenated string', () => {
         const query = { var1: 'value1', var2: 'v2' }
         const path = '/something'
@@ -40,8 +40,8 @@ describe('lib/addQueryToPath.js', () => {
       })
     })
 
-    context('when query is a string', () => {
-      context('that already includes ?', () => {
+    describe('when query is a string', () => {
+      describe('that already includes ?', () => {
         it('should return the correct concatenated string', () => {
           const query = '?name=daniel&descr=awesome'
           const path = '/something'
@@ -52,7 +52,7 @@ describe('lib/addQueryToPath.js', () => {
         })
       })
 
-      context('that DOES NOT include ?', () => {
+      describe('that DOES NOT include ?', () => {
         it('should return the correct concatenated string', () => {
           const query = 'name=daniel&descr=awesome'
           const path = '/something'
@@ -64,7 +64,7 @@ describe('lib/addQueryToPath.js', () => {
       })
     })
 
-    context('when path already includes the ?', () => {
+    describe('when path already includes the ?', () => {
       it('should return the correct concatenated string', () => {
         const query = '?name=daniel&descr=awesome'
         const path = '/something?crazy=true'

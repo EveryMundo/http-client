@@ -16,11 +16,7 @@ describe('lib/promise-get.js', () => {
   beforeEach(() => { box = sinon.createSandbox() })
   afterEach(() => { box.restore() })
 
-  context('promiseGet', () => {
-    const promiseDataToLib = require('../../lib/promise-data-to')
-    // const { promiseGet } = require('../lib/promise-get')
-    const lib = require('../../index')
-
+  describe('promiseGet', () => {
     beforeEach(() => {
       box.stub(promiseDataToLib, 'promiseDataTo').callsFake((...args) => Promise.resolve(args))
     })
