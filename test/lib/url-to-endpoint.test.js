@@ -17,8 +17,8 @@ describe('lib/url-to-endpoint', () => {
 
   afterEach(() => { box.restore() })
 
-  context('urlToEndpoint', () => {
-    context('when receiving and INVALID url =>', () => {
+  describe('urlToEndpoint', () => {
+    describe('when receiving and INVALID url =>', () => {
       it('show throw an error', () => {
         const caller = () => urlToEndpoint()
 
@@ -26,8 +26,8 @@ describe('lib/url-to-endpoint', () => {
       })
     })
 
-    context('when receiving valid url =>', () => {
-      context('with no headers', () => {
+    describe('when receiving valid url =>', () => {
+      describe('with no headers', () => {
         it('should return an object with an object type Endpoint', () => {
           const result = urlToEndpoint('http://test.com/some/path?a=100&b=200')
 
@@ -35,7 +35,7 @@ describe('lib/url-to-endpoint', () => {
         })
       })
 
-      context('with no headers', () => {
+      describe('with no headers', () => {
         it('should return an object with an object type Endpoint', () => {
           const result = urlToEndpoint('http://user:pass@test.com/some/path', { 'content-type': 'text/plain' })
 
@@ -47,8 +47,8 @@ describe('lib/url-to-endpoint', () => {
     })
   })
 
-  context('when receiving and INVALID url =>', () => {
-    context('empty url', () => {
+  describe('when receiving and INVALID url =>', () => {
+    describe('empty url', () => {
       it('show throw an error', () => {
         const caller = () => urlToEndpoint()
 
@@ -56,7 +56,7 @@ describe('lib/url-to-endpoint', () => {
       })
     })
 
-    /* context('invalid protocol', () => {
+    /* describe('invalid protocol', () => {
         it('show throw an error', () => {
           const caller = () => urlToEndpoint('tcp://test.com')
 
@@ -65,10 +65,10 @@ describe('lib/url-to-endpoint', () => {
       }) */
   })
 
-  context('when receiving valid url =>', () => {
+  describe('when receiving valid url =>', () => {
     const http = require('http')
 
-    context('valid simple http url and no headers', () => {
+    describe('valid simple http url and no headers', () => {
       it('should return an object with the expected properties', () => {
         const result = urlToEndpoint('http://test.com/some/path')
 
@@ -88,7 +88,7 @@ describe('lib/url-to-endpoint', () => {
       })
     })
 
-    context('http url with credentials and no headers', () => {
+    describe('http url with credentials and no headers', () => {
       it('should return an object with the expected properties', () => {
         const result = urlToEndpoint('http://Bearer:token@test.com/some/path')
         const expectedHeaders = {
@@ -117,7 +117,7 @@ describe('lib/url-to-endpoint', () => {
       })
     })
 
-    context('http url with credentials AND with headers', () => {
+    describe('http url with credentials AND with headers', () => {
       it('should return an object with the expected properties', () => {
         const headers = { 'content-type': 'application/xml' }
         const endpointUrl = 'http://Bearer:token@test.com/some/path'
@@ -150,7 +150,7 @@ describe('lib/url-to-endpoint', () => {
       })
     })
 
-    context('http simple url with headers', () => {
+    describe('http simple url with headers', () => {
       it('should return an object with the expected properties', () => {
         const headers = { 'content-type': 'application/xml' }
         const endpointUrl = 'http://test.com/some/path'
@@ -175,7 +175,7 @@ describe('lib/url-to-endpoint', () => {
         }
       })
 
-      context('when content-encoding is passed as gzip', () => {
+      describe('when content-encoding is passed as gzip', () => {
         it('should return compress as "gzip"', () => {
           const headers = { 'x-compression': 'gzip' }
           const endpointUrl = 'http://test.com/some/path'
@@ -202,7 +202,7 @@ describe('lib/url-to-endpoint', () => {
       })
     })
 
-    context('http simple url but INVALID headers', () => {
+    describe('http simple url but INVALID headers', () => {
       it('should return an object with the expected properties', () => {
         const headers = ''
         const endpoint = 'http://test.com/some/path'

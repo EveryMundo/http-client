@@ -16,7 +16,7 @@ describe('index.js', () => {
   beforeEach(() => { box = sinon.createSandbox() })
   afterEach(() => { box.restore() })
 
-  context('exported keys and types', () => {
+  describe('exported keys and types', () => {
     const expected = {
       Endpoint: Function,
       GetEndpoint: Function,
@@ -49,7 +49,7 @@ describe('index.js', () => {
       }
     })
 
-    context('httpMethods', () => {
+    describe('httpMethods', () => {
       beforeEach(() => { box.stub(httpClient, 'promiseDataTo') })
 
       describe('#head', () => {

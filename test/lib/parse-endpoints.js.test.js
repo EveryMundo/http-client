@@ -49,11 +49,11 @@ describe('lib/parse-endpoints.js', () => {
     })
   })
 
-  context('parseEndpoints', () => {
+  describe('parseEndpoints', () => {
     const { parseEndpoints } = loadLib()
 
-    context('when receiving and INVALID url =>', () => {
-      context('invalid protocol', () => {
+    describe('when receiving and INVALID url =>', () => {
+      describe('invalid protocol', () => {
         beforeEach(() => {
           box.stub(process.env, 'MAIN_ENDPOINT')
             .value('tcp://test.com/some/path')
@@ -67,7 +67,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('when not receiving any argument =>', () => {
+    describe('when not receiving any argument =>', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAIN_ENDPOINT').value('http://test.com/some/path')
       })
@@ -93,7 +93,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('when receiving a regexp without grouping', () => {
+    describe('when receiving a regexp without grouping', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAIN_ENDPOINT').value('http://test.com/some/path')
       })
@@ -119,7 +119,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('http url with credentials and no headers', () => {
+    describe('http url with credentials and no headers', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAIN_ENDPOINT').value('http://Bearer:token@test.com/some/path')
       })
@@ -146,7 +146,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('http url with credentials AND with headers', () => {
+    describe('http url with credentials AND with headers', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAIN_ENDPOINT')
           .value('http://Bearer:token@test.com/some/path')
@@ -178,7 +178,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('http url with keep-alive headers', () => {
+    describe('http url with keep-alive headers', () => {
       beforeEach(() => {
         if (!('KEEP_ENDPOINT' in process.env)) process.env.KEEP_ENDPOINT = undefined
         box.stub(process.env, 'KEEP_ENDPOINT')
@@ -222,7 +222,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('http url with keep-alive headers', () => {
+    describe('http url with keep-alive headers', () => {
       beforeEach(() => {
         if (!('KEEP_ENDPOINT' in process.env)) process.env.KEEP_ENDPOINT = undefined
         box.stub(process.env, 'KEEP_ENDPOINT')
@@ -266,7 +266,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('http simple url with headers', () => {
+    describe('http simple url with headers', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAIN_ENDPOINT')
           .value('http://test.com/some/path')
@@ -297,7 +297,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('http simple url but INVALID headers', () => {
+    describe('http simple url but INVALID headers', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAIN_ENDPOINT')
           .value('http://test.com/some/path')
@@ -312,7 +312,7 @@ describe('lib/parse-endpoints.js', () => {
       })
     })
 
-    context('Regexp too generic and matches multiple ENV Vars', () => {
+    describe('Regexp too generic and matches multiple ENV Vars', () => {
       beforeEach(() => {
         box.stub(process.env, 'MAIN_ENDPOINT')
           .value('http://test.com/some/path')

@@ -16,7 +16,7 @@ describe('lib/set-headers.js', () => {
   describe('#setHeaders', () => {
     const { setHeaders } = require('../../lib/set-headers.js')
 
-    context('When content-type is not set', () => {
+    describe('When content-type is not set', () => {
       it('should no longer set content-type to application/json', () => {
         const headers = {}
 
@@ -26,7 +26,7 @@ describe('lib/set-headers.js', () => {
       })
     })
 
-    context('When content-type is preset', () => {
+    describe('When content-type is preset', () => {
       it('should not change the content-type sent', () => {
         const headers = { 'content-type': 'application/something-else' }
 
@@ -36,7 +36,7 @@ describe('lib/set-headers.js', () => {
       })
     })
 
-    context('When data is not passed', () => {
+    describe('When data is not passed', () => {
       it('should not set content-length', () => {
         const headers = { 'content-type': 'application/something-else' }
 
@@ -46,7 +46,7 @@ describe('lib/set-headers.js', () => {
       })
     })
 
-    context('When data is passed', () => {
+    describe('When data is passed', () => {
       it('should set content-length with its byte length', () => {
         const headers = {}
         const data = '{"name":"Daniel San","code":"ç"}'
@@ -57,7 +57,7 @@ describe('lib/set-headers.js', () => {
       })
     })
 
-    context('When compress is NOT present', () => {
+    describe('When compress is NOT present', () => {
       it('should not set x-compression', () => {
         const headers = {}
 
@@ -67,7 +67,7 @@ describe('lib/set-headers.js', () => {
       })
     })
 
-    context('When compress is present', () => {
+    describe('When compress is present', () => {
       it('should set x-compression its value', () => {
         const headers = {}
         const compress = 'gzip'

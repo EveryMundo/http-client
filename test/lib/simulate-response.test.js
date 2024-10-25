@@ -28,7 +28,7 @@ describe('lib/simulatedResponse.js', () => {
   describe('#simulatedResponse', () => {
     const { simulatedResponse } = testFile
 
-    context('when called with an array', () => {
+    describe('when called with an array', () => {
       it('should return the expected object with statusCode 222', () => {
         const start = new Date()
         const endpoint = 'http://test.com'

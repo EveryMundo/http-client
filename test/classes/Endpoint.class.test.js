@@ -32,7 +32,7 @@ describe('classes/Endpoint', () => {
     const inputUrlString = 'https://head-url'
     const expectedUrlString = 'https://head-url/'
 
-    context('instance httpMethods', () => {
+    describe('instance httpMethods', () => {
       beforeEach(() => { box.stub(httpClient, 'promiseDataTo') })
       // read methods
       ;['get', 'head'].forEach((method) => {
@@ -124,7 +124,7 @@ describe('classes/Endpoint', () => {
       })
     })
 
-    context.skip('static httpMethods', () => {
+    describe.skip('static httpMethods', () => {
       beforeEach(() => { box.stub(httpClient, 'promiseDataTo') })
 
       describe('#head', () => {

@@ -17,9 +17,9 @@ describe('lib/parse-url', () => {
 
   afterEach(() => { box.restore() })
 
-  context('parseUrl', () => {
-    context('when receiving and INVALID url =>', () => {
-      context('empty url', () => {
+  describe('parseUrl', () => {
+    describe('when receiving and INVALID url =>', () => {
+      describe('empty url', () => {
         it('show throw an error', () => {
           const caller = () => parseUrl()
 
@@ -28,7 +28,7 @@ describe('lib/parse-url', () => {
       })
     })
 
-    context('when receiving valid url =>', () => {
+    describe('when receiving valid url =>', () => {
       it('should return an object with the expected properties', () => {
         const result = parseUrl('http://test.com/some/path?a=100&b=200')
 
@@ -59,7 +59,7 @@ describe('lib/parse-url', () => {
         })
       })
 
-      context('#auth', () => {
+      describe('#auth', () => {
         it('should return user:pass when having both', () => {
           const parsed = parseUrl('http://user:pass@test.com/some/path')
 
