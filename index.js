@@ -2,6 +2,7 @@ const { Endpoint, GetEndpoint, PostEndpoint } = require('./classes/Endpoint.clas
 const Headers = require('./classes/Headers.class.js')
 const Response = require('./classes/Response.class.js')
 const { parseEndpoints } = require('./lib/parse-endpoints.js')
+const { promiseDataTo } = require('./lib/promise-data-to.js')
 
 const urlToEndpoint = (url, headers, agent) => new Endpoint(url, headers || null, agent)
 
@@ -13,7 +14,7 @@ module.exports = {
   Response,
   parseEndpoints,
   urlToEndpoint,
-  promiseDataTo: Endpoint.post,
+  promiseDataTo,
   promiseGet: Endpoint.get,
   promisePost: Endpoint.post,
   fetch: Endpoint.fetch,
