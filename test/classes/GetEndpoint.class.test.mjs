@@ -1,19 +1,10 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import { expect } from 'chai'
+
+import { Endpoint, GetEndpoint } from '../../classes/Endpoint.class.js'
 
 describe('GetEndpoint', () => {
-  // const sinon = require('sinon')
-  const { expect } = require('chai')
-  // eslint-disable-next-line one-var-declaration-per-line
-  // let box
-
-  const { Endpoint, GetEndpoint } = require('../../classes/Endpoint.class.js')
-
-  // beforeEach(() => { box = sinon.createSandbox() })
-  // afterEach(() => { box.restore() })
-
   describe('class GetEndpoint', () => {
     it('should be an instance of Endpoint', () => {
       const endpoint = new GetEndpoint('http://test.com')

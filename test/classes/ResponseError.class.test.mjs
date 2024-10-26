@@ -1,19 +1,11 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
-const ResponseError = require('../../classes/ResponseError.class.js')
-const Response = require('../../classes/Response.class.js')
+import { expect } from 'chai'
+
+import ResponseError from '../../classes/ResponseError.class.js'
+import Response from '../../classes/Response.class.js'
 
 describe('ResponseError', () => {
-  // const sinon = require('sinon')
-  const { expect } = require('chai')
-  // eslint-disable-next-line one-var-declaration-per-line
-  // let box
-
-  // beforeEach(() => { box = sinon.createSandbox() })
-  // afterEach(() => { box.restore() })
-
   describe('class ResponseError', () => {
     it('should be an instance of Error', () => {
       const response = { foo: 'bar' }

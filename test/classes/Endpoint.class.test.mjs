@@ -1,18 +1,16 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import { createSandbox } from 'sinon'
+import { expect } from 'chai'
+import { Endpoint } from '../../classes/Endpoint.class.js'
+import EMUrl from '../../classes/EMUrl.class.js'
+import httpClient from '../../lib/promise-data-to.js'
 
 describe('classes/Endpoint', () => {
-  const sinon = require('sinon')
-  const { expect } = require('chai')
-  const { Endpoint } = require('../../classes/Endpoint.class.js')
-  const EMUrl = require('../../classes/EMUrl.class.js')
-  const httpClient = require('../../lib/promise-data-to.js')
-
   // eslint-disable-next-line one-var-declaration-per-line
   let box
-  beforeEach(() => { box = sinon.createSandbox() })
+
+  beforeEach(() => { box = createSandbox() })
   afterEach(() => { box.restore() })
 
   describe('class Endpoint', () => {

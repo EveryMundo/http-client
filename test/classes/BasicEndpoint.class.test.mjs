@@ -1,16 +1,13 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import sinon from 'sinon'
+import { expect } from 'chai'
+import http from 'http'
 
-const sinon = require('sinon')
-const { expect } = require('chai')
-const http = require('http')
+import BasicEndpoint from '../../classes/BasicEndpoint.class.js'
+import EMUrl from '../../classes/EMUrl.class.js'
 
 describe('classes/Endpoint', () => {
-  const BasicEndpoint = require('../../classes/BasicEndpoint.class.js')
-  const EMUrl = require('../../classes/EMUrl.class.js')
-
   // eslint-disable-next-line one-var-declaration-per-line
   let box
   beforeEach(() => { box = sinon.createSandbox() })
