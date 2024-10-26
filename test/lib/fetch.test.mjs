@@ -1,16 +1,14 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import sinon from 'sinon'
+import { expect } from 'chai'
+
+import { Endpoint } from '../../classes/Endpoint.class.js'
+import httpClient from '../../lib/promise-data-to.js'
 
 describe('lib/fetch.js', () => {
-  const sinon = require('sinon')
-  const { expect } = require('chai')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
-
-  const { Endpoint } = require('../../classes/Endpoint.class.js')
-  const httpClient = require('../../lib/promise-data-to.js')
 
   beforeEach(() => {
     box = sinon.createSandbox()

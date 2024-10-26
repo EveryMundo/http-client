@@ -1,10 +1,8 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
-const { expect } = require('chai')
-const logr = require('../../lib/logr.js')
+import { expect } from 'chai'
+import logr from '../../lib/logr.js'
 
 describe('lib/logr.js', () => {
   describe('mkLogr', async () => {

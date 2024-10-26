@@ -1,14 +1,13 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import { Agent } from 'http'
+import { createSandbox } from 'sinon'
+import { expect } from 'chai'
+
+import testFile from '../../lib/parse-endpoints.js'
+import { parseKeepAlive, parseKeepAliveHeader } from '../../lib/parse-keep-alive-header.js'
 
 describe('lib/parse-endpoints.js', () => {
-  const http = require('http')
-  const sinon = require('sinon')
-  const { expect } = require('chai')
-
-  const loadLib = () => require('../../lib/parse-endpoints.js')
 
   // eslint-disable-next-line one-var-declaration-per-line
   let box
@@ -19,7 +18,7 @@ describe('lib/parse-endpoints.js', () => {
   if (!('MAIN_ENDPOINT_HEADERS' in process.env)) process.env.MAIN_ENDPOINT_HEADERS = ''
 
   beforeEach(() => {
-    box = sinon.createSandbox()
+    box = createSandbox()
     box.stub(process.env, 'MAIN_ENDPOINT').value('http://test.com/some/path')
   })
 
@@ -27,7 +26,7 @@ describe('lib/parse-endpoints.js', () => {
 
   describe('#parseKeepAlive', () => {
     it('should return an object with the expected properties', () => {
-      const { parseKeepAlive } = require('../../lib/parse-keep-alive-header.js')
+      // const { parseKeepAlive } = require('../../lib/parse-keep-alive-header.js')
 
       const headers = { 'keep-alive': 'max=1000, timeout=1000' }
       const res = parseKeepAlive(headers['keep-alive'])
@@ -39,8 +38,6 @@ describe('lib/parse-endpoints.js', () => {
 
   describe('#parseKeepAliveHeader', () => {
     it('should return an object with the expected properties', () => {
-      const { parseKeepAliveHeader } = require('../../lib/parse-keep-alive-header.js')
-
       const headers = { 'keep-alive': 'max=1000, timeout=1000' }
       const res = parseKeepAliveHeader(headers)
       const expected = { max: '1000', timeout: '1000' }
@@ -50,7 +47,7 @@ describe('lib/parse-endpoints.js', () => {
   })
 
   describe('parseEndpoints', () => {
-    const { parseEndpoints } = loadLib()
+    const { parseEndpoints } = testFile
 
     describe('when receiving and INVALID url =>', () => {
       describe('invalid protocol', () => {
@@ -215,7 +212,7 @@ describe('lib/parse-endpoints.js', () => {
 
         expect(result.KEEP[0].getObject()).to.deep.equal(expected.KEEP[0])
 
-        expect(agent).to.be.instanceof(http.Agent)
+        expect(agent).to.be.instanceof(Agent)
         expect(agent.keepAlive).to.be.true
         expect(agent.maxSockets).to.equal(100)
         expect(agent.options.timeout).to.equal(1000)
@@ -259,7 +256,7 @@ describe('lib/parse-endpoints.js', () => {
         expect(result.KEEP[0].getObject()).to.deep.equal(expected)
         // expect(result.KEEP[0]).to.deep.equal(expected)
 
-        expect(agent).to.be.instanceof(http.Agent)
+        expect(agent).to.be.instanceof(Agent)
         expect(agent.keepAlive).to.be.true
         expect(agent.maxSockets).to.equal(50)
         expect(agent.options.timeout).to.be.undefined

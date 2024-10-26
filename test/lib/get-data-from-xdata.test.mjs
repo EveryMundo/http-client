@@ -1,23 +1,19 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import zlib from 'zlib'
+import sinon from 'sinon'
+import { expect } from 'chai'
+
+import testFile from '../../lib/get-data-from-xdata.js'
 
 describe('lib/get-data-from-xdata.js', () => {
-  const zlib = require('zlib')
-  const sinon = require('sinon')
-  const { expect } = require('chai')
-
-  const loadLib = () => require('../../lib/get-data-from-xdata.js')
-
-  // eslint-disable-next-line one-var-declaration-per-line
   let box
 
   beforeEach(() => { box = sinon.createSandbox() })
   afterEach(() => { box.restore() })
 
   describe('#getDataFromXData', () => {
-    const { getDataFromXData } = loadLib()
+    const { getDataFromXData } = testFile
 
     describe('Without Compression', () => {
       describe('when the input data is a String', () => {
