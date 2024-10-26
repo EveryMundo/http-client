@@ -1,15 +1,14 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
+import sinon from 'sinon'
+import { expect } from 'chai'
+import urlHelper from '../../lib/parse-url.js'
+import EMUrl from '../../classes/EMUrl.class.js'
+
 describe('lib/parse-url', () => {
-  const sinon = require('sinon')
-  const { expect } = require('chai')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
-  const { parseUrl } = require('../../lib/parse-url.js')
-  const EMUrl = require('../../classes/EMUrl.class.js')
 
   beforeEach(() => {
     box = sinon.createSandbox()
@@ -21,7 +20,7 @@ describe('lib/parse-url', () => {
     describe('when receiving and INVALID url =>', () => {
       describe('empty url', () => {
         it('show throw an error', () => {
-          const caller = () => parseUrl()
+          const caller = () => urlHelper.parseUrl()
 
           expect(caller).to.throw(Error)
         })
@@ -30,7 +29,7 @@ describe('lib/parse-url', () => {
 
     describe('when receiving valid url =>', () => {
       it('should return an object with the expected properties', () => {
-        const result = parseUrl('http://test.com/some/path?a=100&b=200')
+        const result = urlHelper.parseUrl('http://test.com/some/path?a=100&b=200')
 
         const expected = {
           href: 'http://test.com/some/path?a=100&b=200',
@@ -61,7 +60,7 @@ describe('lib/parse-url', () => {
 
       describe('#auth', () => {
         it('should return user:pass when having both', () => {
-          const parsed = parseUrl('http://user:pass@test.com/some/path')
+          const parsed = urlHelper.parseUrl('http://user:pass@test.com/some/path')
 
           const result = parsed.auth
           const expected = 'user:pass'
@@ -70,7 +69,7 @@ describe('lib/parse-url', () => {
         })
 
         it('should return only pass when not having user when having both', () => {
-          const parsed = parseUrl('http://pass@test.com/some/path')
+          const parsed = urlHelper.parseUrl('http://pass@test.com/some/path')
 
           const result = parsed.auth
           const expected = 'pass'

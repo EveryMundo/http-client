@@ -1,13 +1,11 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
-const sinon = require('sinon')
-const { expect } = require('chai')
+import sinon from 'sinon'
+import { expect } from 'chai'
 
-const { parseUrl } = require('../../lib/parse-url.js')
-const promiseDataToLib = require('../../lib/promise-data-to.js')
-const lib = require('../../index.js')
+import urlHelper from '../../lib/parse-url.js'
+import promiseDataToLib from '../../lib/promise-data-to.js'
+import lib from '../../index.js'
 
 describe('lib/promise-get.js', () => {
   // eslint-disable-next-line one-var-declaration-per-line
@@ -22,7 +20,7 @@ describe('lib/promise-get.js', () => {
     })
 
     it('should call promiseDataTo', async () => {
-      const config = parseUrl('http://password@test.com/somepath')
+      const config = urlHelper.parseUrl('http://password@test.com/somepath')
 
       await lib.promiseGet(config)
 
@@ -30,7 +28,7 @@ describe('lib/promise-get.js', () => {
     })
 
     it('should return method GET', async () => {
-      const config = parseUrl('http://test.com/somepath')
+      const config = urlHelper.parseUrl('http://test.com/somepath')
       // eslint-disable-next-line one-var-declaration-per-line
 
       const result = await lib.promiseGet(config)

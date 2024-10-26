@@ -1,15 +1,15 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import http from 'node:http'
+import sinon from 'sinon'
+import { expect } from 'chai'
+
+import { urlToEndpoint } from '../../index.js'
+import { Endpoint } from '../../classes/Endpoint.class.js'
 
 describe('lib/url-to-endpoint', () => {
-  const sinon = require('sinon')
-  const { expect } = require('chai')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
-  const { urlToEndpoint } = require('../../index.js')
-  const { Endpoint } = require('../../classes/Endpoint.class.js')
 
   beforeEach(() => {
     box = sinon.createSandbox()
@@ -66,8 +66,6 @@ describe('lib/url-to-endpoint', () => {
   })
 
   describe('when receiving valid url =>', () => {
-    const http = require('http')
-
     describe('valid simple http url and no headers', () => {
       it('should return an object with the expected properties', () => {
         const result = urlToEndpoint('http://test.com/some/path')

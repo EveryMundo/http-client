@@ -1,12 +1,12 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
-describe('lib/set-headers.js', () => {
-  const sinon = require('sinon')
-  const { expect } = require('chai')
+import sinon from 'sinon'
+import { expect } from 'chai'
 
+import fileTotest from '../../lib/set-headers.js'
+
+describe('lib/set-headers.js', () => {
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
@@ -14,7 +14,7 @@ describe('lib/set-headers.js', () => {
   afterEach(() => { box.restore() })
 
   describe('#setHeaders', () => {
-    const { setHeaders } = require('../../lib/set-headers.js')
+    const { setHeaders } = fileTotest
 
     describe('When content-type is not set', () => {
       it('should no longer set content-type to application/json', () => {

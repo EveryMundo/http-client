@@ -1,18 +1,15 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
-const sinon = require('sinon')
-const { expect } = require('chai')
-const lib = require('../index.js')
-const httpClient = require('../lib/promise-data-to.js')
+import sinon from 'sinon'
+import { expect } from 'chai'
+import lib from '../index.js'
+import httpClient from '../lib/promise-data-to.js'
 
 describe('index.js', () => {
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
-  // const logr = require('@everymundo/simple-logr')
   beforeEach(() => { box = sinon.createSandbox() })
   afterEach(() => { box.restore() })
 

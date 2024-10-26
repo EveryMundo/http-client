@@ -1,25 +1,21 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import { createSandbox } from 'sinon'
+import { expect } from 'chai'
+
+import logr from '@everymundo/simple-logr'
+import testFile from '../../lib/simulate-response.js'
 
 describe('lib/simulatedResponse.js', () => {
-  const sinon = require('sinon')
-
-  const { expect } = require('chai')
-
-  const logr = require('@everymundo/simple-logr')
-
   // cleanrequire = require('@everymundo/cleanrequire'),
 
   const noop = () => { }
 
-  const testFile = require('../../lib/simulate-response.js')
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
   beforeEach(() => {
-    box = sinon.createSandbox()
+    box = createSandbox()
     box.stub(logr, 'info').callsFake(noop)
   })
 

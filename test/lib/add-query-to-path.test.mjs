@@ -3,20 +3,19 @@
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
 
+import { createSandbox } from 'sinon'
+import { expect } from 'chai'
+import fileTotest from '../../lib/add-query-to-path.js'
+
 describe('lib/addQueryToPath.js', () => {
-  const sinon = require('sinon')
-  const { expect } = require('chai')
-
-  const loadLib = () => require('../../lib/add-query-to-path.js')
-
   // eslint-disable-next-line one-var-declaration-per-line
   let box
 
-  beforeEach(() => { box = sinon.createSandbox() })
+  beforeEach(() => { box = createSandbox() })
   afterEach(() => { box.restore() })
 
   describe('#addQueryToPath', () => {
-    const { addQueryToPath } = loadLib()
+    const { addQueryToPath } = fileTotest
 
     describe('when query is empty', () => {
       it('should return inputPath', () => {

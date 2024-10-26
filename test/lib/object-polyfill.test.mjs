@@ -1,13 +1,10 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
+import { expect } from 'chai'
+
+import objectPolyfill from '../../lib/object-polyfill.js'
 
 describe('lib/fetch.js', () => {
-  const { expect } = require('chai')
-
-  const objectPolyfill = require('../../lib/object-polyfill.js')
-
   describe('objectPolyfill', async () => {
     it('should set the property fromEntries', async () => {
       const O = {}

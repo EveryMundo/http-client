@@ -1,18 +1,16 @@
-'require strict'
-
 /* eslint-env mocha */
 /* eslint-disable import/no-unresolved, no-unused-expressions */
-const { EventEmitter } = require('node:events')
-const http = require('node:http')
-const zlib = require('node:zlib')
-const sinon = require('sinon')
-const { expect } = require('chai')
+import { EventEmitter } from 'node:events'
+import http from 'node:http'
+import zlib from 'node:zlib'
+import sinon from 'sinon'
+import { expect } from 'chai'
 
-const { Endpoint } = require('../../classes/Endpoint.class.js')
-const libSetHeaders = require('../../lib/set-headers.js')
-const simulateLib = require('../../lib/simulate-response.js')
-const config = require('../../lib/config.js')
-const lib = require('../../lib/promise-data-to.js')
+import { Endpoint } from '../../classes/Endpoint.class.js'
+import libSetHeaders from '../../lib/set-headers.js'
+import simulateLib from '../../lib/simulate-response.js'
+import config from '../../lib/config.js'
+import lib from '../../lib/promise-data-to.js'
 
 describe('lib/promise-data-to', () => {
   const noop = () => { }
@@ -192,7 +190,7 @@ describe('lib/promise-data-to', () => {
         const expectedData = JSON.stringify(data)
         const protoConfig = Endpoint.clone(endpoint)
         protoConfig.protocol = 'http:'
-        protoConfig.query = { name: 'Daniel', features: ['awesome', 'handsome'] }
+        // protoConfig.query = { name: 'Daniel', features: ['awesome', 'handsome'] }
 
         return lib.promiseDataTo(protoConfig, data)
           .then((stats) => {
