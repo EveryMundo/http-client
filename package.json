@@ -19,6 +19,11 @@
       "pre-push": "npm run cover && npm run check-coverage"
     }
   },
+  "standard": {
+    "env": {
+      "mocha": true
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EveryMundo/http-client.git"
@@ -38,7 +43,7 @@
   "homepage": "https://github.com/EveryMundo/http-client#readme",
   "devDependencies": {
     "c8": "^10.1.2",
-    "chai": "^4.5.0",
+    "chai": "^5.1.2",
     "flatstr": "^1.0.12",
     "ghooks": "^2.0.4",
     "mocha": "^10.7.3",
